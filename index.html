@@ -140,7 +140,7 @@
         <!-- Dashboard Visualizer -->
         <div id="dashboardContent" class="hidden space-y-6">
             
-            <!-- Section 1: สรุปและเปรียบเทียบผลงานจริงกับแผนการผลิต (Plan vs Actual Balance) -->
+            <!-- Section 1: Plan vs Actual Performance -->
             <div class="space-y-4">
                 <div class="flex items-center gap-2 text-slate-800">
                     <i data-lucide="bar-chart-3" class="text-blue-600"></i>
@@ -469,7 +469,7 @@
                 </div>
             </div>
 
-            <!-- Section 5: Diagnostic Console (แผงตรวจสอบระบบเชิงลึกสำหรับการจับคู่ชีต) -->
+            <!-- Section 5: Diagnostic Console -->
             <div class="bg-slate-900 text-slate-300 p-6 rounded-[2.2rem] card-glow border border-slate-800 text-left space-y-4">
                 <div class="flex justify-between items-center cursor-pointer" onclick="toggleDiagnostics()">
                     <div class="flex items-center gap-2.5">
@@ -617,31 +617,51 @@
             if (!str) return "";
             return String(str)
                 .toLowerCase()
-                .replace(/[^a-z0-9\u0e00-\u0e7f]/g, '');
+                .trim()
+                .replace(/[\r\n\t]/g, '') // ล้างสัญลักษณ์สิ้นสุดบรรทัดพิเศษ
+                .replace(/[^a-z0-9\u0e00-\u0e7f]/g, ''); // เก็บพยัญชนะ ตัวเลข และอักษรไทยทั้งหมด
         }
 
-        // ค้นหาคีย์ตารางแบบยืดหยุ่นโดยยึดตามลำดับความสำคัญของคีย์ที่กำหนดมาก่อนหลัง (Strict Priority Matcher)
-        // ช่วยแก้ปัญหาการจับคู่คอลัมน์ชื่อซ้ำซ้อนกันในชีตเดียวได้อย่างสมบูรณ์แบบ
+        // ระบบจับคู่คอลัมน์อัจฉริยะ (Strict Key Resolver)
         function getFlexKey(row, possibleKeys) {
             if (!row) return "";
-            const cleanedPossible = possibleKeys.map(k => cleanKey(k));
             
-            // ขั้นตอนที่ 1: ตรวจสอบแบบจับคู่ตรงกันแบบ 100% ตามลำดับความสำคัญของคีย์
-            for (let cp of cleanedPossible) {
+            // ลำดับที่ 1: ตรวจจับกรณีตรงกันแบบ 100% ตัวพิมพ์เล็กใหญ่/เว้นวรรคตรงกัน (Exact Match)
+            for (let pk of possibleKeys) {
+                const cleanPk = String(pk).trim().toLowerCase();
                 for (let actualKey in row) {
-                    if (!actualKey) continue;
-                    const cleanedActual = cleanKey(actualKey);
-                    if (cleanedActual === cp) {
+                    if (String(actualKey).trim().toLowerCase() === cleanPk) {
                         return actualKey;
                     }
                 }
             }
-            
-            // ขั้นตอนที่ 2: หากไม่พบแบบตรงตัว ให้ค้นหาแบบกึ่งตรง (Sub-string) ตามลำดับความสำคัญ
+
+            // ลำดับที่ 2: ตรวจจับหลังจากทำการล้างตัวอักษรพิเศษและสัญลักษณ์ (Normalized Match)
+            const cleanedPossible = possibleKeys.map(k => cleanKey(k));
             for (let cp of cleanedPossible) {
                 for (let actualKey in row) {
-                    if (!actualKey) continue;
+                    if (cleanKey(actualKey) === cp) {
+                        return actualKey;
+                    }
+                }
+            }
+
+            // ลำดับที่ 3: ตรวจจับแบบ Substring (Substring Match) โดยต้องมีความยาวมากกว่า 3 ตัวอักษรเพื่อป้องกันการชนกัน
+            for (let cp of cleanedPossible) {
+                if (cp.length < 3) continue;
+                for (let actualKey in row) {
                     const cleanedActual = cleanKey(actualKey);
+                    
+                    // ป้องกันความเสี่ยงกรณีชนกัน (Conflict Guards):
+                    // ห้ามไม่ให้คีย์หลักอย่าง "วันที่" ไปจับสับสนกับ "ดึงวันที่ตามแผน"
+                    if (cp === "วันที่" && cleanedActual !== "วันที่") {
+                        continue;
+                    }
+                    // ห้ามไม่ให้คีย์หลักอย่าง "ออร์เดอร์" ไปจับสับสนกับ "ออร์เดอร์แผน"
+                    if (cp === "ออรเดอร" && cleanedActual !== "ออรเดอร") {
+                        continue;
+                    }
+                    
                     if (cleanedActual.includes(cp) || cp.includes(cleanedActual)) {
                         return actualKey;
                     }
@@ -724,11 +744,11 @@
 
         // ถอดและประกอบข้อมูลแผน (Plan/Plan_Data)
         function parsePlanRecord(row) {
-            const poNo = getFlexVal(row, ["Prod  \nOrder No", "Prod \n Order No", "Prod Order No", "Prod  Order No", "Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"]).trim();
+            const poNo = getFlexVal(row, ["Prod Order No", "Prod  Order No", "Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"]).trim();
             
-            let pMeters = parseFloat(String(getFlexVal(row, ["ยาวเมตร", "ยาวรวม \n(เมตร)", "ยาวรวม \n (เมตร)", "ยาวรวม", "ความยาว", "ความยาวทั้งหมด", "ยาวรวมเมตร"])).replace(/,/g, '')) || 0;
+            let pMeters = parseFloat(String(getFlexVal(row, ["ยาวเมตร", "ยาวรวม (เมตร)", "ยาวรวม", "ความยาว", "ความยาวทั้งหมด", "ยาวรวมเมตร"])).replace(/,/g, '')) || 0;
             
-            let pWeight = parseFloat(String(getFlexVal(row, ["น้ำหนัก (KG)", "น้ำหนัก", "Net \nWeight", "Net Weight", "นน"])).replace(/,/g, '')) || 0;
+            let pWeight = parseFloat(String(getFlexVal(row, ["น้ำหนัก (KG)", "น้ำหนัก", "Net Weight", "Net  Weight", "นน"])).replace(/,/g, '')) || 0;
             if (pWeight < 50 && pMeters > 50) {
                 pWeight = pWeight * 1000;
             }
@@ -739,8 +759,8 @@
                 pArea = (widthVal / 1000) * pMeters;
             }
 
-            let pTime = parseTimeToMinutes(getFlexVal(row, ["Time \n (Min)", "Time (Min)", "Time", "CODE"]));
-            const pSpeed = parseFloat(String(getFlexVal(row, ["Speed \n(M/Min)", "Speed (M/Min)", "Speed", "สปีด"])).replace(/,/g, '')) || 0;
+            let pTime = parseTimeToMinutes(getFlexVal(row, ["Time (Min)", "Time", "CODE"]));
+            const pSpeed = parseFloat(String(getFlexVal(row, ["Speed (M/Min)", "Speed", "สปีด"])).replace(/,/g, '')) || 0;
             if (pTime === 0 && pSpeed > 0 && pMeters > 0) {
                 pTime = pMeters / pSpeed;
             }
@@ -756,7 +776,7 @@
 
         // ถอดและประกอบข้อมูลผลิตจริง (Actual/Production)
         function parseActualRecord(row) {
-            // สำคัญมาก: กำหนดลำดับค้นหา "Wo. No." หรือ "ออร์เดอร์" ก่อน "ออร์เดอร์แผน" เพื่อเลี่ยง Bug การหยิบคอลัมน์ค่าวางเปล่ามาประมวลผล
+            // สำคัญมาก: กำหนดลำดับค้นหา Wo. No. ก่อน ออร์เดอร์แผน เพื่อไม่ให้ระบบหยิบข้อมูลแถวออเดอร์เปล่ามาประมวลผล
             const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"], "-").trim();
             
             const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"], "0");
@@ -778,7 +798,7 @@
 
             const rShift = getFlexVal(row, ["กะ", "shift"], "-").trim();
             
-            // คัดกรองและสแกนวันที่จากคอลัมน์ "วันที่" ของแถวนั้นตรงๆ หรือดึงจาก "เวลาเริ่ม" หากไม่มีคอลัมน์วันที่ระบุ
+            // ตรวจสอบวันที่จากคอลัมน์ "วันที่" ของแถวนั้นตรงๆ ป้องกันการหลงจับคู่ผิดกับ "ดึงวันที่ตามแผน"
             let rawDate = getFlexVal(row, ["วันที่", "date"]);
             if (!rawDate) {
                 const startTimeVal = getFlexVal(row, ["เวลาเริ่ม", "start_time"]);
@@ -860,13 +880,11 @@
             } catch (err) {
                 console.warn("Direct fetch failed, resolving through CORS proxy fallback...");
                 try {
-                    // ทดลองยิงผ่าน Proxy ตัวแรก (corsproxy.io)
                     const proxyUrl = `https://corsproxy.io/?` + encodeURIComponent(url);
                     const proxyRes = await fetch(proxyUrl);
                     if (!proxyRes.ok) throw new Error();
                     return await proxyRes.text();
                 } catch (proxyErr) {
-                    // ทดลองยิงผ่าน Proxy ตัวสำรอง (allorigins)
                     const backupProxyUrl = `https://api.allorigins.win/raw?url=` + encodeURIComponent(url);
                     const backupRes = await fetch(backupProxyUrl);
                     if (!backupRes.ok) throw new Error("All proxy servers are currently unreachable");
@@ -902,8 +920,8 @@
                     document.getElementById('diagPlanHeaders').innerText = planHeaders.join(', ');
                     document.getElementById('diagProdHeaders').innerText = prodHeaders.join(', ');
 
-                    document.getElementById('diagPlanOrderKey').innerText = getFlexKey(rawPlanRecords[0], ["Prod  \nOrder No", "Prod \n Order No", "Prod Order No", "Prod  Order No", "Wo. No."]) || "ไม่พบ!";
-                    document.getElementById('diagPlanMetersKey').innerText = getFlexKey(rawPlanRecords[0], ["ยาวเมตร", "ยาวรวม \n(เมตร)", "ยาวรวม", "ความยาว"]) || "ไม่พบ!";
+                    document.getElementById('diagPlanOrderKey').innerText = getFlexKey(rawPlanRecords[0], ["Prod Order No", "Wo. No."]) || "ไม่พบ!";
+                    document.getElementById('diagPlanMetersKey').innerText = getFlexKey(rawPlanRecords[0], ["ยาวเมตร", "ความยาว"]) || "ไม่พบ!";
                     document.getElementById('diagProdOrderKey').innerText = getFlexKey(rawProductionRecords[0], ["Wo. No.", "WoNo", "ออร์เดอร์"]) || "ไม่พบ!";
                     document.getElementById('diagProdMetersKey').innerText = getFlexKey(rawProductionRecords[0], ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"]) || "ไม่พบ!";
 
