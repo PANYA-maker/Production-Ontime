@@ -620,15 +620,31 @@
                 .replace(/[^a-z0-9\u0e00-\u0e7f]/g, '');
         }
 
-        // ค้นหาคีย์ตารางแบบยืดหยุ่นสูง รองรับทั้งการจับคู่แบบตรงและแบบ Substring
+        // ค้นหาคีย์ตารางแบบยืดหยุ่นโดยยึดตามลำดับความสำคัญของคีย์ที่กำหนดมาก่อนหลัง (Strict Priority Matcher)
+        // ช่วยแก้ปัญหาการจับคู่คอลัมน์ชื่อซ้ำซ้อนกันในชีตเดียวได้อย่างสมบูรณ์แบบ
         function getFlexKey(row, possibleKeys) {
             if (!row) return "";
             const cleanedPossible = possibleKeys.map(k => cleanKey(k));
-            for (let actualKey in row) {
-                if (!actualKey) continue;
-                const cleanedActual = cleanKey(actualKey);
-                if (cleanedPossible.includes(cleanedActual) || cleanedPossible.some(cp => cleanedActual.includes(cp) || cp.includes(cleanedActual))) {
-                    return actualKey;
+            
+            // ขั้นตอนที่ 1: ตรวจสอบแบบจับคู่ตรงกันแบบ 100% ตามลำดับความสำคัญของคีย์
+            for (let cp of cleanedPossible) {
+                for (let actualKey in row) {
+                    if (!actualKey) continue;
+                    const cleanedActual = cleanKey(actualKey);
+                    if (cleanedActual === cp) {
+                        return actualKey;
+                    }
+                }
+            }
+            
+            // ขั้นตอนที่ 2: หากไม่พบแบบตรงตัว ให้ค้นหาแบบกึ่งตรง (Sub-string) ตามลำดับความสำคัญ
+            for (let cp of cleanedPossible) {
+                for (let actualKey in row) {
+                    if (!actualKey) continue;
+                    const cleanedActual = cleanKey(actualKey);
+                    if (cleanedActual.includes(cp) || cp.includes(cleanedActual)) {
+                        return actualKey;
+                    }
                 }
             }
             return "";
@@ -740,6 +756,7 @@
 
         // ถอดและประกอบข้อมูลผลิตจริง (Actual/Production)
         function parseActualRecord(row) {
+            // สำคัญมาก: กำหนดลำดับค้นหา "Wo. No." หรือ "ออร์เดอร์" ก่อน "ออร์เดอร์แผน" เพื่อเลี่ยง Bug การหยิบคอลัมน์ค่าวางเปล่ามาประมวลผล
             const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"], "-").trim();
             
             const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"], "0");
@@ -761,7 +778,7 @@
 
             const rShift = getFlexVal(row, ["กะ", "shift"], "-").trim();
             
-            // คัดกรองและสแกนวันที่จาก "เวลาเริ่ม" หากไม่มีคอลัมน์ "วันที่" ในตาราง Actual_Data
+            // คัดกรองและสแกนวันที่จากคอลัมน์ "วันที่" ของแถวนั้นตรงๆ หรือดึงจาก "เวลาเริ่ม" หากไม่มีคอลัมน์วันที่ระบุ
             let rawDate = getFlexVal(row, ["วันที่", "date"]);
             if (!rawDate) {
                 const startTimeVal = getFlexVal(row, ["เวลาเริ่ม", "start_time"]);
