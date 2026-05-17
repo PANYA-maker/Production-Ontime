@@ -184,11 +184,11 @@
                         <div class="flex justify-between items-baseline">
                             <div>
                                 <p class="text-3xl font-black text-slate-800" id="actualMeters">0 <span class="text-xs font-normal">ม.</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง (คอลัมน์ M)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง</p>
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planMeters">/ 0 <span class="text-xs font-normal">ม.</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ M - ยาวเมตร)</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -215,7 +215,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planWeight">/ 0 <span class="text-xs font-normal">กก.</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ K)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ K - น้ำหนัก KG)</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -242,7 +242,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planArea">/ 0 <span class="text-xs font-normal">ตร.ม.</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ J)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ J - พื้นที่ m2)</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -265,11 +265,11 @@
                         <div class="flex justify-between items-baseline">
                             <div>
                                 <p class="text-3xl font-black text-slate-800" id="actualTime">0 <span class="text-xs font-normal">นาที</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง (เวลาผลิตวินาที / 60)</p>
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planTime">/ 0 <span class="text-xs font-normal">นาที</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ H)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ H - Time Min)</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -292,16 +292,16 @@
                         <div class="flex justify-between items-baseline">
                             <div>
                                 <p class="text-3xl font-black text-slate-800" id="actualSpeed">0 <span class="text-xs font-normal">m/min</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">เฉลี่ยที่เดินเครื่องจริง</p>
+                                <p class="text-[10px] text-slate-400 font-bold">เฉลี่ยที่เดินเครื่องผลิตจริง</p>
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planSpeed">/ 0 <span class="text-xs font-normal">m/min</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">แผนเฉลี่ย (M ยาว / H เวลา)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">เป้าหมายแผน (คอลัมน์ M / H)</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
                             <div class="flex justify-between text-[11px] font-bold text-slate-500">
-                                <span id="diffSpeed">สเปกต่างกัน: 0%</span>
+                                <span id="diffSpeed">ส่วนต่างสปีด: 0%</span>
                                 <span id="achieveSpeed">0%</span>
                             </div>
                             <div class="w-full h-2 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
@@ -321,7 +321,7 @@
                         </div>
                         <div class="text-left">
                             <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานวิเคราะห์งานแผนที่ "ค้างผลิต" (Planned Jobs NOT Produced on Date)</h3>
-                            <p class="text-[11px] text-slate-500 font-medium">คำนวณจากใบออเดอร์ที่มีรายชื่อในแผนการผลิตของวันที่เลือก แต่ยังไม่มีการบันทึกเครื่องผลิตจริง</p>
+                            <p class="text-[11px] text-slate-500 font-medium">คำนวณจากใบออเดอร์ในแผนการผลิตของวันที่เลือก แต่ยังไม่ถูกส่งไปรันการผลิตจริงในเครื่องจักร</p>
                         </div>
                     </div>
                     <span id="backlogSummaryCount" class="px-3 py-1.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded-xl">ยอดค้างผลิต: 0 งาน</span>
@@ -332,7 +332,7 @@
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="milestone" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">ระยะทางค้าง</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">ระยะทางค้างแผน</p>
                             <h4 id="backlogMeters" class="text-sm font-black text-slate-700">0 ม.</h4>
                         </div>
                     </div>
@@ -340,7 +340,7 @@
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="layout" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">พื้นที่ค้าง</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">พื้นที่ค้างแผน</p>
                             <h4 id="backlogSqm" class="text-sm font-black text-slate-700">0 ตร.ม.</h4>
                         </div>
                     </div>
@@ -348,7 +348,7 @@
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="weight" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">น้ำหนักค้าง</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">น้ำหนักค้างแผน</p>
                             <h4 id="backlogWeight" class="text-sm font-black text-slate-700">0 กก.</h4>
                         </div>
                     </div>
@@ -356,7 +356,7 @@
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="clock" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">เวลาผลิตค้าง</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">เวลาค้างแผน</p>
                             <h4 id="backlogMinutes" class="text-sm font-black text-slate-700">0 นาที</h4>
                         </div>
                     </div>
@@ -364,7 +364,7 @@
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left col-span-2 lg:col-span-1">
                         <div class="p-2.5 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="zap" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">ความเร็วแผนค้าง</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">สปีดชดเชยเฉลี่ย</p>
                             <h4 id="backlogSpeed" class="text-sm font-black text-rose-600">0 m/m</h4>
                         </div>
                     </div>
@@ -373,16 +373,16 @@
                 <!-- List Table of Missed Plan Jobs -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                     <div class="p-4 bg-slate-50 border-b border-slate-100 text-left">
-                        <h4 class="text-xs font-black text-slate-700">รายชื่อใบงานในแผนที่ "ค้างส่งผลิต" วันนี้</h4>
+                        <h4 class="text-xs font-black text-slate-700">รายชื่อใบงานในแผนงาน (Plan) ที่ตกค้างในวันหยุดนี้</h4>
                     </div>
                     <div class="overflow-x-auto max-h-60 custom-scrollbar">
-                        <table class="w-full text-left text-xs">
+                        <table class="w-full text-left text-xs border-collapse">
                             <thead class="bg-slate-900 text-white font-black uppercase text-[10px]">
                                 <tr>
-                                    <th class="p-3">เลขที่ใบออเดอร์ (PO/Order No)</th>
+                                    <th class="p-3">เลขที่ใบออเดอร์ (Prod Order No)</th>
                                     <th class="p-3">ชื่อลูกค้า</th>
                                     <th class="p-3">ชื่อสินค้า</th>
-                                    <th class="p-3 text-right">ความยาวแผน (เมตร)</th>
+                                    <th class="p-3 text-right">ความยาวแผน (ม.)</th>
                                     <th class="p-3 text-right">น้ำหนักแผน (กก.)</th>
                                     <th class="p-3 text-right">พื้นที่แผน (ตร.ม.)</th>
                                     <th class="p-3 text-right">เวลาแผน (นาที)</th>
@@ -396,13 +396,13 @@
                 </div>
             </div>
 
-            <!-- Section 3: Charts & Analytics (Ontime & Comparisons) -->
+            <!-- Section 3: Charts & Analytics -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Chart 1: Ontime Doughnut -->
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow flex flex-col justify-between">
                     <div>
                         <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="pie-chart" class="text-blue-500"></i> สัดส่วนความตรงต่อเวลา (กะทำงานจริง)</h3>
-                        <p class="text-xs text-slate-400 font-medium text-left">แบ่งกลุ่มใบสั่งผลิตจริงตามสถานะความรวดเร็ว</p>
+                        <p class="text-xs text-slate-400 font-medium text-left">สรุปสถานะการผลิตของกะงานจริงในวันที่เลือก</p>
                     </div>
                     <div class="h-60 flex justify-center items-center mt-4">
                         <canvas id="chartOntime"></canvas>
@@ -411,8 +411,8 @@
                 <!-- Chart 2: Plan vs Actual Volume Chart -->
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow lg:col-span-2 flex flex-col justify-between">
                     <div>
-                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="activity" class="text-blue-500"></i> กราฟแนวโน้มปริมาณการผลิตเทียบแผนงาน</h3>
-                        <p class="text-xs text-slate-400 font-medium text-left">เปรียบเทียบระหว่างความยาวเมตรตามแผน และความยาวที่ผลิตได้จริงรายวัน</p>
+                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="activity" class="text-blue-500"></i> กราฟเปรียบเทียบความก้าวหน้าแผนเทียบรันจริง</h3>
+                        <p class="text-xs text-slate-400 font-medium text-left">เปรียบเทียบระยะทางเมตรแผน (ยาวเมตร) และระยะทางที่เครื่องจักรผลิตได้จริง</p>
                     </div>
                     <div class="h-60 mt-4">
                         <canvas id="chartPlanActualCompare"></canvas>
@@ -420,20 +420,20 @@
                 </div>
             </div>
 
-            <!-- Section 4: รายงานบันทึกการผลิต YUELI รายบรรทัด (Production Raw Table) -->
+            <!-- Section 4: บันทึกรายงานการผลิตจริง -->
             <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div class="text-left">
-                        <h3 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="table" class="text-blue-500"></i> บันทึกรายงานการผลิตจริง รายบรรทัด (Actual Production Lines)</h3>
-                        <p class="text-xs text-slate-400 font-medium">ข้อมูลประมวลผลดึงจาก Google Sheets แถบตารางผลิตจริง</p>
+                        <h3 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="table" class="text-blue-500"></i> รายงานผลการผลิตจริงรายบรรทัด (Actual Production Logs)</h3>
+                        <p class="text-xs text-slate-400 font-medium">บันทึกการผลิตแบบเรียลไทม์ที่สแกนจากสเปรดชีต Gid 1750235965</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                         <div class="relative w-full sm:w-64">
                             <i data-lucide="search" class="w-4 h-4 absolute left-4 top-3.5 text-slate-400"></i>
-                            <input id="searchInput" oninput="filterData()" type="text" placeholder="พิมพ์เลขที่ออร์เดอร์เพื่อค้นหา..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                            <input id="searchInput" oninput="filterData()" type="text" placeholder="พิมพ์เลขที่ออเดอร์เพื่อค้นหา..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <button onclick="exportToCSV()" class="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 rounded-xl font-bold text-xs transition-all">
-                            <i data-lucide="download" class="w-4 h-4"></i> ส่งออกข้อมูลผลิต (CSV)
+                            <i data-lucide="download" class="w-4 h-4"></i> ส่งออกข้อมูล (CSV)
                         </button>
                     </div>
                 </div>
@@ -474,7 +474,6 @@
     </div>
 
     <script>
-        // ลิงก์เริ่มต้นที่ระบุ Gid ของทั้งฝั่ง Plan และ Production ของคุณ
         const defaultProductionUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=1750235965&single=true&output=csv";
         const defaultPlanUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=692364592&single=true&output=csv";
 
@@ -484,7 +483,6 @@
         let ontimeChart = null;
         let comparisonChart = null;
 
-        // ฟังก์ชันช่วยแปลงและยืนยัน Format ลิงก์ CSV
         function cleanSheetUrl(url, defaultUrl) {
             if (!url) return defaultUrl;
             url = String(url).trim();
@@ -533,20 +531,18 @@
             if (prodUrlVal && planUrlVal) {
                 localStorage.setItem('yueli_sheet_url', prodUrlVal);
                 localStorage.setItem('yueli_plan_url', planUrlVal);
-                showToast("บันทึกการเชื่อมต่อแล้ว กำลังรีโหลดข้อมูลทั้งหมด...", "success");
+                showToast("บันทึกการตั้งค่าเรียบร้อย กำลังดึงและเชื่อมต่อข้อมูล...", "success");
                 toggleSettingsModal(false);
                 fetchData();
             } else {
-                showToast("กรุณากรอกลิงก์ข้อมูลให้ครบถ้วน", "error");
+                showToast("กรุณากรอกลิงก์ให้ถูกต้องและครบถ้วน", "error");
             }
         }
 
-        // ค้นหาหัวตารางแบบยืดหยุ่น ป้องกันปัญหาเรื่องสระเพี้ยนหรือพิมพ์เล็กพิมพ์ใหญ่
         function getFlexVal(row, possibleKeys, defaultVal = "") {
             if (!row) return defaultVal;
             for (let k of possibleKeys) {
                 if (!k) continue;
-                // ตัดช่องว่าง วงเล็บ เครื่องหมายพิเศษทั้งหมดเพื่อหา Keyword
                 const searchKey = String(k).replace(/[\s\(\)\.\/\n\r\\"]/g, '').trim().toLowerCase();
                 for (let actualKey in row) {
                     if (!actualKey) continue;
@@ -559,7 +555,6 @@
             return defaultVal;
         }
 
-        // แปลงเวลาแบบ 0:03:44 หรือ 27 ให้เป็นนาทีจำนวนจริง
         function parseTimeToMinutes(timeStr) {
             if (!timeStr) return 0;
             timeStr = String(timeStr).trim();
@@ -575,18 +570,21 @@
             return isNaN(val) ? 0 : val;
         }
 
-        // ปรับแต่งและรวมรูปแบบวันที่ให้อยู่ในรูปแบบเดียวกัน (เช่น "15/5/2026")
         function normalizeDate(dateStr) {
             if (!dateStr) return "";
             dateStr = String(dateStr).trim();
+            if (dateStr.includes(' ')) {
+                dateStr = dateStr.split(' ')[0];
+            }
             if (dateStr.includes('/')) {
                 let parts = dateStr.split('/');
                 if (parts.length === 3) {
                     let day = parseInt(parts[0], 10);
                     let month = parseInt(parts[1], 10);
-                    let year = parts[2].trim();
-                    if (year.length === 2) {
-                        year = "20" + year; // แปลง "26" เป็น "2026"
+                    let yearStr = parts[2].trim();
+                    let year = parseInt(yearStr, 10);
+                    if (yearStr.length === 2) {
+                        year = 2000 + year;
                     }
                     return `${day}/${month}/${year}`;
                 }
@@ -594,13 +592,11 @@
             return dateStr;
         }
 
-        // ฟังก์ชันล้างรหัสใบงาน เพื่อใช้จับคู่เปรียบเทียบความตรงกัน
         function normalizeOrderNo(orderStr) {
             if (!orderStr) return "";
             return String(orderStr).replace(/[\s\-_]/g, '').toLowerCase().trim();
         }
 
-        // Custom CSV Parser สำหรับโครงสร้างชีตจาก Google Sheets
         function parseCSV(text) {
             if (!text) return [];
             const rows = [];
@@ -657,7 +653,6 @@
             const planUrl = getActivePlanUrl();
 
             try {
-                // โหลดข้อมูลแบบขนานจากทั้งสองแหล่ง
                 const [prodResponse, planResponse] = await Promise.all([
                     fetch(prodUrl),
                     fetch(planUrl)
@@ -678,7 +673,7 @@
                 if (rawProductionRecords.length > 0 && rawPlanRecords.length > 0) {
                     populateFilterOptions(rawProductionRecords, rawPlanRecords);
                     filterData();
-                    showToast("ดึงและจับคู่ข้อมูลทั้งสองชีตเสร็จสมบูรณ์!", "success");
+                    showToast("ดึงและเชื่อมต่อข้อมูลเปรียบเทียบจากสองตารางเสร็จสิ้น!", "success");
                     document.getElementById('dashboardContent').classList.remove('hidden');
                 } else {
                     throw new Error("ข้อมูลในแผ่นงานว่างเปล่า หรือหัวตารางไม่ตรงตามมาตรฐาน");
@@ -695,7 +690,6 @@
             }
         }
 
-        // นำเข้าวันที่จากทั้งสองตารางเพื่อทำตัวกรองเดียวแบบไร้รอยต่อ
         function populateFilterOptions(prodRecords, planRecords) {
             const dateSelect = document.getElementById('dateFilter');
             dateSelect.innerHTML = '<option value="all">ทุกวันที่ผลิต</option>';
@@ -707,7 +701,6 @@
             
             const normalizedUniqueDates = [...new Set(rawDates.map(normalizeDate).filter(Boolean))];
             
-            // เรียงลำดับวันที่จากอนาคตลงไปอดีต
             normalizedUniqueDates.sort((a,b) => {
                 const parseDate = s => {
                     const parts = s.split('/');
@@ -723,7 +716,6 @@
                 dateSelect.appendChild(opt);
             });
 
-            // เลือกวันที่ล่าสุดเป็นค่าเริ่มต้นหากมีข้อมูล
             if (normalizedUniqueDates.length > 0) {
                 dateSelect.value = normalizedUniqueDates[0];
             }
@@ -733,7 +725,6 @@
             const dateVal = document.getElementById('dateFilter').value;
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
 
-            // คัดกรองชีตผลิตจริง
             const filteredProd = rawProductionRecords.filter(row => {
                 const rDate = normalizeDate(getFlexVal(row, ["วันที่", "date"]));
                 const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"]).toLowerCase();
@@ -743,7 +734,6 @@
                 return matchDate && matchSearch;
             });
 
-            // คัดกรองชีตแผนงาน
             const filteredPlan = rawPlanRecords.filter(row => {
                 const rDate = normalizeDate(getFlexVal(row, ["วันที่", "date"]));
                 const matchDate = (dateVal === "all" || rDate === dateVal);
@@ -755,7 +745,7 @@
         }
 
         function renderDashboard(recordsProd, recordsPlan, selectedDate) {
-            // --- 1. คำนวณฝั่งผลิตจริง (Actual Production Stats) ---
+            // --- 1. ผลิตจริง (Actual Production Stats) ---
             let actMeters = 0;
             let actWeight = 0;
             let actArea = 0;
@@ -811,7 +801,6 @@
                 const lossTimeMin = Math.round((parseFloat(String(rawLossSec).replace(/,/g, '')) || 0) / 60);
                 const stopsCount = parseInt(String(rawStops).replace(/,/g, '')) || 0;
 
-                // เรนเดอร์ลงในตารางหลัก
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-all";
                 tr.innerHTML = `
@@ -842,7 +831,7 @@
                 tableBody.appendChild(tr);
             });
 
-            // --- 2. คำนวณฝั่งแผนการผลิต (Plan Schedule Stats) ---
+            // --- 2. แผนการผลิต (Plan Schedule Stats) ---
             let planMeters = 0;
             let planWeight = 0;
             let planArea = 0;
@@ -851,7 +840,7 @@
 
             recordsPlan.forEach(p => {
                 const pMeters = parseFloat(String(getFlexVal(p, ["ยาวเมตร", "ความยาว"])).replace(/,/g, '')) || 0;
-                const pWeight = parseFloat(String(getFlexVal(p, ["น้ำหนัก (KG)", "น้ำหนัก"])).replace(/,/g, '')) || 0;
+                const pWeight = parseFloat(String(getFlexVal(p, ["น้ำหนัก (KG)", "น้ำหนัก", "นน"])).replace(/,/g, '')) || 0;
                 const pArea = parseFloat(String(getFlexVal(p, ["พื้นที่ (m2)", "พื้นที่"])).replace(/,/g, '')) || 0;
                 const pTime = parseTimeToMinutes(getFlexVal(p, ["Time (Min)", "Time"]));
 
@@ -861,13 +850,12 @@
                 planTimeMin += pTime;
             });
 
-            // คำนวณความเร็วเป้าหมายของแผน (สปีดแผน = เมตรแผน / เวลาแผน)
+            // สูตรคำนวณสปีดแผนตามเงื่อนไข (ยาวเมตร M / Time Min H)
             const calculatedPlanSpeed = planTimeMin > 0 ? (planMeters / planTimeMin) : 0;
             const actualAvgSpeed = actSpeedCount > 0 ? (actSpeedSum / actSpeedCount) : 0;
             const actualAvgTimeMin = Math.round(actTimeSec / 60);
 
-            // --- 3. ตรวจสอบงานแผนค้างที่ไม่ได้ผลิตในวันนั้น (Missed Plan Backlog Logic) ---
-            // สร้าง Set ของเลขที่ใบสั่งผลิตที่มีการผลิตจริงในวันนี้ เพื่อการจับคู่ที่เร็วขึ้น
+            // --- 3. การตรวจสอบใบงานค้างจากแผนที่ไม่ได้รันผลิต (Planned Backlog Tracking) ---
             const producedOrdersSet = new Set(
                 recordsProd.map(r => normalizeOrderNo(getFlexVal(r, ["Wo. No.", "WoNo", "ออร์เดอร์"])))
             );
@@ -885,7 +873,6 @@
                 const poNo = getFlexVal(p, ["Prod Order No", "Prod  Order No", "เลขที่ PO", "ออร์เดอร์", "Wo. No."]);
                 const cleanPo = normalizeOrderNo(poNo);
 
-                // หากแผนงานชุดนี้ "ไม่มี" รหัสการผลิตจริงในวันนี้ -> เป็นงานตกค้างที่ผลิตไม่ทัน
                 if (cleanPo && !producedOrdersSet.has(cleanPo)) {
                     const pMeters = parseFloat(String(getFlexVal(p, ["ยาวเมตร"])).replace(/,/g, '')) || 0;
                     const pWeight = parseFloat(String(getFlexVal(p, ["น้ำหนัก (KG)"])).replace(/,/g, '')) || 0;
@@ -901,7 +888,6 @@
                     const customer = getFlexVal(p, ["ชื่อลูกค้า", "ลูกค้า", "customer"], "-");
                     const product = getFlexVal(p, ["ชื่อสินค้า", "สินค้า"], "-");
 
-                    // เพิ่มรายการเข้าตารางสรุปงานแผนค้าง
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-amber-50/40 transition-all border-b border-slate-100";
                     tr.innerHTML = `
@@ -918,22 +904,18 @@
             });
 
             if (backlogCount === 0) {
-                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! แผนงานของวันนี้ถูกนำเข้ากระบวนการผลิตจนครบทุกใบงาน ไม่พบงานค้างที่ไม่ได้ทำ</td></tr>`;
+                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! ไม่พบงานในแผนตกค้างที่ไม่ได้สับรันในวันนี้</td></tr>`;
             }
 
-            // คำนวณความเร็วเฉลี่ยของแผนงานที่ค้าง
             const backlogAvgSpeed = backlogTimeSum > 0 ? (backlogMetersSum / backlogTimeSum) : 0;
 
-            // --- 4. แสดงสถิติอัปเดตบนหน้าจอ (UI KPI Updates) ---
-            
-            // อัปเดตค่านับรวมอ้างอิง
+            // --- 4. อัปเดตข้อมูล UI KPI บาลานซ์ ---
             document.getElementById('actualJobs').innerText = recordsProd.length;
             document.getElementById('planJobs').innerText = `/ ${planJobsCount}`;
             const jobAch = planJobsCount > 0 ? ((recordsProd.length / planJobsCount) * 100) : 0;
             document.getElementById('achieveJobs').innerText = jobAch.toFixed(1) + "%";
             document.getElementById('barJobs').style.width = Math.min(jobAch, 100) + "%";
 
-            // อัปเดตเมตร
             document.getElementById('actualMeters').innerHTML = `${Math.round(actMeters).toLocaleString()} <span class="text-xs font-normal">ม.</span>`;
             document.getElementById('planMeters').innerHTML = `/ ${Math.round(planMeters).toLocaleString()} <span class="text-xs font-normal">ม.</span>`;
             const metAch = planMeters > 0 ? ((actMeters / planMeters) * 100) : 0;
@@ -943,7 +925,6 @@
             document.getElementById('diffMeters').innerText = `Diff: ${diffM >= 0 ? '+' : ''}${Math.round(diffM).toLocaleString()} ม.`;
             document.getElementById('diffMeters').className = `text-[11px] font-bold ${diffM >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
 
-            // อัปเดตน้ำหนัก กก
             document.getElementById('actualWeight').innerHTML = `${Math.round(actWeight).toLocaleString()} <span class="text-xs font-normal">กก.</span>`;
             document.getElementById('planWeight').innerHTML = `/ ${Math.round(planWeight).toLocaleString()} <span class="text-xs font-normal">กก.</span>`;
             const weiAch = planWeight > 0 ? ((actWeight / planWeight) * 100) : 0;
@@ -953,7 +934,6 @@
             document.getElementById('diffWeight').innerText = `Diff: ${diffW >= 0 ? '+' : ''}${Math.round(diffW).toLocaleString()} กก.`;
             document.getElementById('diffWeight').className = `text-[11px] font-bold ${diffW >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
 
-            // อัปเดตพื้นที่ ตรม
             document.getElementById('actualArea').innerHTML = `${Math.round(actArea).toLocaleString()} <span class="text-xs font-normal">ตร.ม.</span>`;
             document.getElementById('planArea').innerHTML = `/ ${Math.round(planArea).toLocaleString()} <span class="text-xs font-normal">ตร.ม.</span>`;
             const areAch = planArea > 0 ? ((actArea / planArea) * 100) : 0;
@@ -963,7 +943,6 @@
             document.getElementById('diffArea').innerText = `Diff: ${diffA >= 0 ? '+' : ''}${Math.round(diffA).toLocaleString()} ตร.ม.`;
             document.getElementById('diffArea').className = `text-[11px] font-bold ${diffA >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
 
-            // อัปเดตเวลาผลิตรวม
             document.getElementById('actualTime').innerHTML = `${actualAvgTimeMin.toLocaleString()} <span class="text-xs font-normal">นาที</span>`;
             document.getElementById('planTime').innerHTML = `/ ${Math.round(planTimeMin).toLocaleString()} <span class="text-xs font-normal">นาที</span>`;
             const timAch = planTimeMin > 0 ? ((actualAvgTimeMin / planTimeMin) * 100) : 0;
@@ -973,17 +952,16 @@
             document.getElementById('diffTime').innerText = `Diff: ${diffT >= 0 ? '+' : ''}${Math.round(diffT).toLocaleString()} นาที`;
             document.getElementById('diffTime').className = `text-[11px] font-bold ${diffT >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
 
-            // อัปเดตสปีดเฉลี่ยเปรียบเทียบ
             document.getElementById('actualSpeed').innerHTML = `${actualAvgSpeed.toFixed(1)} <span class="text-xs font-normal">m/m</span>`;
             document.getElementById('planSpeed').innerHTML = `/ ${calculatedPlanSpeed.toFixed(1)} <span class="text-xs font-normal">m/m</span>`;
             const speAch = calculatedPlanSpeed > 0 ? ((actualAvgSpeed / calculatedPlanSpeed) * 100) : 0;
             document.getElementById('achieveSpeed').innerText = speAch.toFixed(1) + "%";
             document.getElementById('barSpeed').style.width = Math.min(speAch, 100) + "%";
             const diffS = actualAvgSpeed - calculatedPlanSpeed;
-            document.getElementById('diffSpeed').innerText = `ส่วนต่าง: ${diffS >= 0 ? '+' : ''}${diffS.toFixed(1)} m/min`;
+            document.getElementById('diffSpeed').innerText = `ส่วนต่างสปีด: ${diffS >= 0 ? '+' : ''}${diffS.toFixed(1)} m/min`;
             document.getElementById('diffSpeed').className = `text-[11px] font-bold ${diffS >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
 
-            // อัปเดตสรุปข้อมูลใบงานตกค้าง (Missed Plan Backlog Widgets)
+            // อัปเดตสถิติตารางค้างผลิต (Missed Plan Backlog Summary)
             document.getElementById('backlogSummaryCount').innerText = `ยอดค้างผลิต: ${backlogCount} งาน`;
             document.getElementById('backlogMeters').innerText = Math.round(backlogMetersSum).toLocaleString() + " ม.";
             document.getElementById('backlogSqm').innerText = Math.round(backlogAreaSum).toLocaleString() + " ตร.ม.";
@@ -991,11 +969,9 @@
             document.getElementById('backlogMinutes').innerText = Math.round(backlogTimeSum).toLocaleString() + " นาที";
             document.getElementById('backlogSpeed').innerText = backlogAvgSpeed.toFixed(1) + " m/m";
 
-            // คำนวณเปอร์เซ็นต์ Ontime รายกะ
             const totalScheduledJobs = ontimeCounts["ทันแผน"] + ontimeCounts["ช้ากว่าแผน"];
             const ontimePercent = totalScheduledJobs > 0 ? ((ontimeCounts["ทันแผน"] / totalScheduledJobs) * 100) : 0;
 
-            // บันทึกรายงานรวมรายบรรทัด
             document.getElementById('rowCount').innerText = `แสดงผลข้อมูลผลิตจริง: ${recordsProd.length} รายการ`;
 
             renderCharts(ontimeCounts, actMeters, planMeters, selectedDate);
@@ -1005,7 +981,6 @@
             if (ontimeChart) ontimeChart.destroy();
             if (comparisonChart) comparisonChart.destroy();
 
-            // 1. Doughnut Chart: Ontime Status (ผลผลิตจริง)
             const ctxOntime = document.getElementById('chartOntime').getContext('2d');
             ontimeChart = new Chart(ctxOntime, {
                 type: 'doughnut',
@@ -1030,7 +1005,6 @@
                 }
             });
 
-            // 2. Bar Chart เปรียบเทียบปริมาณ เมตร ของแผนงาน VS ผลิตจริง
             const ctxComp = document.getElementById('chartPlanActualCompare').getContext('2d');
             comparisonChart = new Chart(ctxComp, {
                 type: 'bar',
@@ -1074,7 +1048,6 @@
             });
         }
 
-        // ระบบส่งออกข้อมูลรายงานผลิตจริงเป็น CSV
         function exportToCSV() {
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
             csvContent += "Wo. No.,กะ,วันที่ผลิต,เวลาเริ่ม/สิ้นสุด,ความเร็วเฉลี่ย,ระยะทางเมตร,น้ำหนัก,สถานะ Ontime\r\n";
@@ -1103,6 +1076,14 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = `fixed top-5 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full text-sm font-bold shadow-2xl transition-all duration-300 ${type === 'success' ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'}`;
+            toast.classList.remove('hidden');
+            setTimeout(() => { toast.classList.add('hidden'); }, 3000);
         }
 
         window.onload = fetchData;
