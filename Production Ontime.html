@@ -95,6 +95,22 @@
             <p class="text-slate-500 font-bold">กำลังดึงและประมวลผลข้อมูลการผลิตจริง...</p>
         </div>
 
+        <!-- Error State (Hidden initially) -->
+        <div id="errorState" class="hidden p-8 bg-rose-50 border-2 border-rose-100 rounded-[2.5rem] text-center space-y-4">
+            <div class="inline-flex p-4 bg-rose-100 text-rose-600 rounded-full">
+                <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-lg font-black text-rose-800">ไม่สามารถเชื่อมต่อข้อมูล Google Sheet ได้</h3>
+            <p id="errorMessage" class="text-xs text-rose-600 font-medium max-w-lg mx-auto leading-relaxed">ข้อมูลรายละเอียดข้อผิดพลาดจะแสดงตรงนี้</p>
+            <div class="pt-2 text-xs text-slate-500 space-y-1">
+                <p>1. ตรวจสอบว่า Google Sheet ได้ถูกตั้งค่า <b>"เผยแพร่ไปยังเว็บ (Publish to the Web)"</b> เป็นแบบ <b>CSV</b> เรียบร้อยแล้ว</p>
+                <p>2. ตรวจสอบสัญญาณอินเทอร์เน็ตหน้างาน</p>
+            </div>
+            <button onclick="fetchData()" class="mt-4 inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl font-bold text-xs transition-all">
+                <i data-lucide="rotate-cw" class="w-4 h-4"></i> ลองใหม่อีกครั้ง
+            </button>
+        </div>
+
         <!-- Dashboard Widgets (Hidden until loaded) -->
         <div id="dashboardContent" class="hidden space-y-6">
             
@@ -209,6 +225,19 @@
         let ontimeChart = null;
         let jobTypeChart = null;
 
+        // Helper to get nested value by looking up potential headers case-insensitively
+        function getFlexVal(row, possibleKeys, defaultVal = "") {
+            for (let k of possibleKeys) {
+                const searchKey = k.trim().toLowerCase();
+                for (let actualKey in row) {
+                    if (actualKey.trim().toLowerCase() === searchKey) {
+                        return row[actualKey] !== undefined && row[actualKey] !== null ? row[actualKey] : defaultVal;
+                    }
+                }
+            }
+            return defaultVal;
+        }
+
         // Custom Robust CSV Parser
         function parseCSV(text) {
             const rows = [];
@@ -251,10 +280,12 @@
 
         async function fetchData() {
             document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('errorState').classList.add('hidden');
             document.getElementById('dashboardContent').classList.add('hidden');
 
             try {
                 const response = await fetch(csvUrl);
+                if (!response.ok) throw new Error("ไม่สามารถเรียกค้นข้อมูลจากเซิร์ฟเวอร์ Google Docs ได้");
                 const csvText = await response.text();
                 rawRecords = parseCSV(csvText);
 
@@ -262,25 +293,27 @@
                     populateFilterOptions(rawRecords);
                     renderDashboard(rawRecords);
                     showToast("ดึงข้อมูลล่าสุดเรียบร้อยแล้ว!", "success");
+                    document.getElementById('dashboardContent').classList.remove('hidden');
                 } else {
-                    showToast("ไม่พบข้อมูลสำหรับการวิเคราะห์", "error");
+                    throw new Error("โครงสร้างไฟล์ CSV ผิดพลาด หรือไม่มีข้อมูลในตาราง");
                 }
             } catch (error) {
                 console.error(error);
-                showToast("การดึงข้อมูลผิดพลาด กรุณาลองใหม่อีกครั้ง", "error");
+                document.getElementById('errorMessage').innerText = error.message;
+                document.getElementById('errorState').classList.remove('hidden');
+                showToast("การดึงข้อมูลผิดพลาด", "error");
             } finally {
                 document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('dashboardContent').classList.remove('hidden');
                 lucide.createIcons();
             }
         }
 
         function populateFilterOptions(records) {
             const dateSelect = document.getElementById('dateFilter');
-            // Keep "all" option
             dateSelect.innerHTML = '<option value="all">แสดงทุกวันที่</option>';
             
-            const uniqueDates = [...new Set(records.map(r => r["วันที่"]).filter(Boolean))];
+            // Flexibly find date key
+            const uniqueDates = [...new Set(records.map(r => getFlexVal(r, ["วันที่", "date"])).filter(Boolean))];
             uniqueDates.forEach(date => {
                 const opt = document.createElement('option');
                 opt.value = date;
@@ -309,12 +342,13 @@
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
 
             const filtered = rawRecords.filter(row => {
-                const matchDate = (dateVal === "all" || row["วันที่"] === dateVal);
-                const matchShift = (shiftVal === "all" || row["กะ"] === shiftVal);
-                
-                const wo = (row["Wo. No."] || "").toLowerCase();
-                const ord = (row["ออร์เดอร์"] || "").toLowerCase();
-                const matchSearch = (searchVal === "" || wo.includes(searchVal) || ord.includes(searchVal));
+                const rDate = getFlexVal(row, ["วันที่", "date"]);
+                const rShift = getFlexVal(row, ["กะ", "shift"]);
+                const rWo = getFlexVal(row, ["Wo. No.", "ออร์เดอร์", "ออร์เดอร์แผน"]).toLowerCase();
+
+                const matchDate = (dateVal === "all" || rDate === dateVal);
+                const matchShift = (shiftVal === "all" || rShift === shiftVal);
+                const matchSearch = (searchVal === "" || rWo.includes(searchVal));
 
                 return matchDate && matchShift && matchSearch;
             });
@@ -336,10 +370,14 @@
             tableBody.innerHTML = '';
 
             records.forEach(row => {
-                // Parse Numbers Safely
-                const meters = parseFloat((row["ความยาวทั้งหมด(เมตร)"] || "0").replace(/,/g, '')) || 0;
-                const weight = parseFloat((row["นน.ทั้งหมด(กก)"] || "0").replace(/,/g, '')) || 0;
-                const speed = parseFloat((row["AVG_Speed(M/min)"] || "0").replace(/,/g, '')) || 0;
+                // Parse Numbers Safely using flexible match
+                const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวรวม (เมตร)", "เมตร", "length"], "0");
+                const rawWeight = getFlexVal(row, ["นน.ทั้งหมด(กก)", "นน.ทั้งหมด", "น้ำหนักรวม (กก)", "น้ำหนัก", "weight"], "0");
+                const rawSpeed = getFlexVal(row, ["AVG_Speed(M/min)", "AVG_Speed", "สปีดจริง", "speed"], "0");
+
+                const meters = parseFloat(rawMeters.replace(/,/g, '')) || 0;
+                const weight = parseFloat(rawWeight.replace(/,/g, '')) || 0;
+                const speed = parseFloat(rawSpeed.replace(/,/g, '')) || 0;
 
                 totalMeters += meters;
                 totalWeight += weight;
@@ -349,25 +387,31 @@
                 }
 
                 // Count Statuses
-                const ontimeStatus = row["สถานะ Ontime"] || "นอกแผน";
+                const ontimeStatus = getFlexVal(row, ["สถานะ Ontime", "สถานะ"], "นอกแผน");
                 if (ontimeCounts.hasOwnProperty(ontimeStatus)) {
                     ontimeCounts[ontimeStatus]++;
                 }
 
-                const jobType = row["จำแนกประเภทงาน"] || "งานแทรกด่วนนอกแผน";
+                const jobType = getFlexVal(row, ["จำแนกประเภทงาน", "ประเภทงาน"], "งานแทรกด่วนนอกแผน");
                 if (jobTypeCounts.hasOwnProperty(jobType)) {
                     jobTypeCounts[jobType]++;
                 }
+
+                const rWo = getFlexVal(row, ["Wo. No.", "ออร์เดอร์", "ออร์เดอร์แผน"], "-");
+                const rShift = getFlexVal(row, ["กะ", "shift"], "-");
+                const rFlute = getFlexVal(row, ["ลอน", "flute"], "-");
+                const rStart = getFlexVal(row, ["เวลาเริ่ม", "start_time"], "-");
+                const rEnd = getFlexVal(row, ["เวลาสิ้นสุด", "end_time"], "-");
 
                 // Render Table Row
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-all";
                 tr.innerHTML = `
-                    <td class="p-4 font-bold text-slate-800">${row["Wo. No."] || row["ออร์เดอร์"] || "-"}</td>
-                    <td class="p-4 text-center font-bold text-slate-500">${row["กะ"] || "-"}</td>
-                    <td class="p-4 text-center font-bold text-slate-400">${row["ลอน"] || "-"}</td>
-                    <td class="p-4 text-center font-mono text-slate-500">${row["เวลาเริ่ม"] || "-"}</td>
-                    <td class="p-4 text-center font-mono text-slate-500">${row["เวลาสิ้นสุด"] || "-"}</td>
+                    <td class="p-4 font-bold text-slate-800">${rWo}</td>
+                    <td class="p-4 text-center font-bold text-slate-500">${rShift}</td>
+                    <td class="p-4 text-center font-bold text-slate-400">${rFlute}</td>
+                    <td class="p-4 text-center font-mono text-slate-500">${rStart}</td>
+                    <td class="p-4 text-center font-mono text-slate-500">${rEnd}</td>
                     <td class="p-4 text-right font-black text-slate-700">${speed.toLocaleString()}</td>
                     <td class="p-4 text-right font-black text-slate-700">${meters.toLocaleString()}</td>
                     <td class="p-4 text-right font-black text-slate-700">${weight.toLocaleString()}</td>
