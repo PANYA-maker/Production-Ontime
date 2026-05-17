@@ -739,6 +739,48 @@
             return key ? String(row[key]) : defaultVal;
         }
 
+        // ฟังก์ชันแปลงรูปแบบเวลาสเปรดชีต (เช่น 0:27:56 หรือ 27:56 หรือเลขทศนิยมตรงๆ) เป็น "นาที"
+        function parseTimeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            timeStr = String(timeStr).trim();
+            if (timeStr.includes(':')) {
+                const parts = timeStr.split(':');
+                if (parts.length === 3) {
+                    // รูปแบบ HH:MM:SS
+                    const h = parseFloat(parts[0]) || 0;
+                    const m = parseFloat(parts[1]) || 0;
+                    const s = parseFloat(parts[2]) || 0;
+                    return (h * 60) + m + (s / 60);
+                } else if (parts.length === 2) {
+                    // รูปแบบ MM:SS
+                    const m = parseFloat(parts[0]) || 0;
+                    const s = parseFloat(parts[1]) || 0;
+                    return m + (s / 60);
+                }
+            }
+            return parseFloat(timeStr.replace(/,/g, '')) || 0;
+        }
+
+        // ฟังก์ชันแปลงรูปแบบเวลาสเปรดชีตเป็น "วินาที"
+        function parseTimeToSeconds(timeStr) {
+            if (!timeStr) return 0;
+            timeStr = String(timeStr).trim();
+            if (timeStr.includes(':')) {
+                const parts = timeStr.split(':');
+                if (parts.length === 3) {
+                    const h = parseFloat(parts[0]) || 0;
+                    const m = parseFloat(parts[1]) || 0;
+                    const s = parseFloat(parts[2]) || 0;
+                    return (h * 3600) + (m * 60) + s;
+                } else if (parts.length === 2) {
+                    const m = parseFloat(parts[0]) || 0;
+                    const s = parseFloat(parts[1]) || 0;
+                    return (m * 60) + s;
+                }
+            }
+            return parseFloat(timeStr.replace(/,/g, '')) || 0;
+        }
+
         // จัดการฟอร์แมตวันที่แบบครอบคลุม รองรับ พ.ศ. สั้น/ยาว และ ค.ศ. สั้น/ยาว
         function normalizeDate(dateStr) {
             if (!dateStr) return "";
@@ -806,18 +848,20 @@
         // - คอลัมน์ M: ยาวเมตร
         // - คอลัมน์ K: น้ำหนัก (KG)
         // - คอลัมน์ J: พื้นที่ (m2)
-        // - คอลัมน์ H: Time (Min)
+        // - คอลัมน์ H: Time (Min) -> แปลงกรณีเจอ "0:27:56" หรือเศษส่วนเวลา
         function parsePlanRecord(row) {
             const poNo = getFlexVal(row, ["Prod Order No", "Prod  Order No", "Wo. No.", "ออร์เดอร์"]).trim();
             const rawMeters = getFlexVal(row, ["ยาวเมตร", "ยาวรวม (เมตร)", "ยาวรวม", "ความยาว"], "0");
             const rawWeight = getFlexVal(row, ["น้ำหนัก (KG)", "น้ำหนัก", "Net Weight", "นน"], "0");
             const rawArea = getFlexVal(row, ["พื้นที่ (m2)", "พื้นที่", "พื้นที่.ทั้งหมด(ตรม)"], "0");
-            const rawTimeMin = getFlexVal(row, ["Time (Min)", "Time", "เวลาผลิต"], "0");
+            const rawTimeMin = getFlexVal(row, ["Time (Min)", "Time", "เวลาผลิต", "เวลาดำเนินงาน"], "0");
 
             const pMeters = parseFloat(String(rawMeters).replace(/,/g, '')) || 0;
             const pWeight = parseFloat(String(rawWeight).replace(/,/g, '')) || 0;
             const pArea = parseFloat(String(rawArea).replace(/,/g, '')) || 0;
-            const pTimeMin = parseFloat(String(rawTimeMin).replace(/,/g, '')) || 0;
+            
+            // แปลงสปีดและเวลาที่มีโอกาสติดรูปแบบ "0:27:56"
+            const pTimeMin = parseTimeToMinutes(rawTimeMin);
 
             const customer = getFlexVal(row, ["ชื่อลูกค้า", "ลูกค้า", "customer"], "-").trim();
             const product = getFlexVal(row, ["ชื่อสินค้า", "สินค้า"], "-").trim();
@@ -835,7 +879,7 @@
         // - คอลัมน์ P: ความยาวทั้งหมด(เมตร)
         // - คอลัมน์ N: นน.ทั้งหมด(กก)
         // - คอลัมน์ O: พื้นที่.ทั้งหมด(ตรม)
-        // - คอลัมน์ I: เวลาผลิต(วินาที)
+        // - คอลัมน์ I: เวลาผลิต(วินาที) -> เพิ่มระบบตรวจสอบการแปลงเวลาแบบมีโคลอนด้วยเพื่อความทนทาน
         function parseActualRecord(row) {
             const pd = getFlexVal(row, ["PD", "ใบสั่งผลิต", "ใบงาน", "รหัสงาน", "Wo. No."]).trim();
             const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"], "0");
@@ -846,7 +890,9 @@
             const meters = parseFloat(String(rawMeters).replace(/,/g, '')) || 0;
             const weight = parseFloat(String(rawWeight).replace(/,/g, '')) || 0;
             const area = parseFloat(String(rawArea).replace(/,/g, '')) || 0;
-            const timeSec = parseFloat(String(rawTimeSec).replace(/,/g, '')) || 0;
+            
+            // แปลงเวลาผลิตจริง (วินาที)
+            const timeSec = parseTimeToSeconds(rawTimeSec);
 
             // ฟิลด์ช่วยและสถานะทั่วไป
             const rShift = getFlexVal(row, ["กะ", "shift"], "-").trim();
@@ -1248,7 +1294,7 @@
             document.getElementById('diffArea').innerText = `Diff: ${diffA >= 0 ? '+' : ''}${Math.round(diffA).toLocaleString()} ตร.ม.`;
             document.getElementById('diffArea').className = `text-[11px] font-bold ${diffA >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
 
-            // เวลา
+            // เวลา (อัปเดตเป็นแบบชั่วโมง นาที วินาทีที่สมบูรณ์)
             document.getElementById('actualTime').innerHTML = `${Math.round(actualAvgTimeMin).toLocaleString()} <span class="text-xs font-normal">นาที</span>`;
             document.getElementById('planTime').innerHTML = `/ ${Math.round(planTimeMin).toLocaleString()} <span class="text-xs font-normal">นาที</span>`;
             const timAch = planTimeMin > 0 ? ((actualAvgTimeMin / planTimeMin) * 100) : 0;
