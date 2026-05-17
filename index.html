@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YUELI Production Live Dashboard</title>
+    <title>YUELI Plan vs Actual Dashboard</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js for premium analytics charts -->
@@ -47,7 +47,7 @@
     <!-- Toast Notification for Alerts -->
     <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl hidden flex items-center gap-2 transition-all duration-300">
         <span id="toast-icon">✨</span>
-        <span id="toast-message">ระบบโหลดข้อมูลสเปรดชีตเรียบร้อย</span>
+        <span id="toast-message">ระบบโหลดข้อมูลเรียบร้อย</span>
     </div>
 
     <!-- Link Settings Modal -->
@@ -57,8 +57,8 @@
                 <div class="flex items-center gap-3">
                     <div class="p-3 bg-blue-100 text-blue-600 rounded-2xl"><i data-lucide="settings" class="w-6 h-6"></i></div>
                     <div>
-                        <h3 class="font-black text-lg text-slate-800">ตั้งค่าการเชื่อมต่อแหล่งข้อมูล</h3>
-                        <p class="text-xs text-slate-400">ระบุลิงก์นำเข้าข้อมูล Google Sheets (CSV)</p>
+                        <h3 class="font-black text-lg text-slate-800">ตั้งค่าการเชื่อมต่อ Google Sheets</h3>
+                        <p class="text-xs text-slate-400">ระบุลิงก์นำเข้าข้อมูลทั้งแผนงานและงานผลิตจริง</p>
                     </div>
                 </div>
                 <button onclick="toggleSettingsModal(false)" class="p-2 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-400"><i data-lucide="x" class="w-5 h-5"></i></button>
@@ -66,18 +66,18 @@
 
             <div class="space-y-4">
                 <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ลิงก์ CSV จาก Google Sheets</label>
-                    <textarea id="sheetUrlInput" rows="3" placeholder="วางลิงก์สเปรดชีตของคุณ..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 text-slate-700"></textarea>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block text-left">1. ลิงก์ข้อมูลผลิตจริง (Actual - Gid 1750235965)</label>
+                    <textarea id="sheetUrlInput" rows="2" placeholder="วางลิงก์สเปรดชีตจริง..." class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 text-slate-700"></textarea>
                 </div>
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2 text-slate-500 text-[11px] leading-relaxed">
-                    <p class="font-black text-slate-700 flex items-center gap-1.5"><i data-lucide="help-circle" class="w-4 h-4 text-blue-500"></i> ลิงก์ปัจจุบันคือ:</p>
-                    <p class="font-mono bg-white p-2 rounded-lg border border-slate-100 break-all select-all text-[10px]">https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=1750235965&single=true&output=csv</p>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block text-left">2. ลิงก์แผนงานการผลิต (Plan - Gid 692364592)</label>
+                    <textarea id="planUrlInput" rows="2" placeholder="วางลิงก์แผนงาน..." class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 text-slate-700"></textarea>
                 </div>
             </div>
 
             <div class="flex gap-3">
                 <button onclick="toggleSettingsModal(false)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 p-4 rounded-2xl font-bold text-xs transition-all">ยกเลิก</button>
-                <button onclick="saveCustomSheetUrl()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-2xl font-black text-xs transition-all shadow-lg shadow-blue-500/20">บันทึกและรีโหลด</button>
+                <button onclick="saveCustomSheetUrls()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-2xl font-black text-xs transition-all shadow-lg shadow-blue-500/20">บันทึกและรีโหลด</button>
             </div>
         </div>
     </div>
@@ -92,31 +92,23 @@
                     <i data-lucide="gauge" class="w-8 h-8"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-black tracking-tight text-slate-800">YUELI LIVE PERFORMANCE</h1>
+                    <h1 class="text-2xl md:text-3xl font-black tracking-tight text-slate-800">YUELI PLAN vs ACTUAL</h1>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
                         <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full inline-block animate-ping"></span>
-                        ตรวจวัดประสิทธิผลผลิตรายกะตรงเวลา (Live Synchronization)
+                        ระบบเปรียบเทียบแผนและผลลัพธ์ผลิตจริงรายวัน
                     </p>
                 </div>
             </div>
             
-            <!-- Dashboard Controls & Dynamic Dropdown Filters -->
+            <!-- Dashboard Controls -->
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                 <button onclick="toggleSettingsModal(true)" class="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3.5 rounded-2xl font-bold text-xs transition-all w-full sm:w-auto">
-                    <i data-lucide="settings" class="w-4 h-4"></i> ตั้งค่าระบบดึงข้อมูล
+                    <i data-lucide="settings" class="w-4 h-4"></i> ตั้งค่าแหล่งข้อมูล
                 </button>
                 <div class="flex items-center gap-2 bg-slate-100 px-4 py-3 rounded-2xl w-full sm:w-auto">
                     <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
                     <select id="dateFilter" onchange="filterData()" class="bg-transparent font-bold text-slate-700 outline-none border-none text-xs cursor-pointer w-full">
                         <option value="all">ทุกวันที่ผลิต</option>
-                    </select>
-                </div>
-                <div class="flex items-center gap-2 bg-slate-100 px-4 py-3 rounded-2xl w-full sm:w-auto">
-                    <i data-lucide="users" class="w-4 h-4 text-slate-400"></i>
-                    <select id="shiftFilter" onchange="filterData()" class="bg-transparent font-bold text-slate-700 outline-none border-none text-xs cursor-pointer w-full">
-                        <option value="all">กะทำงานทั้งหมด</option>
-                        <option value="A">กะ A (เช้า)</option>
-                        <option value="B">กะ B (ดึก)</option>
                     </select>
                 </div>
                 <button onclick="fetchData()" class="flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 rounded-2xl font-bold text-xs active:scale-95 transition-all w-full sm:w-auto">
@@ -125,13 +117,13 @@
             </div>
         </div>
 
-        <!-- System Loading Cover -->
+        <!-- Loading View -->
         <div id="loadingState" class="text-center py-28 bg-white rounded-[2.5rem] border border-slate-100 card-glow">
             <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mb-4"></div>
-            <p class="text-slate-500 font-bold text-sm">กำลังเชื่อมต่อฐานข้อมูล Google Sheets แถบตารางที่ 1750235965...</p>
+            <p class="text-slate-500 font-bold text-sm">กำลังเชื่อมโยงข้อมูล Plan และ Production จาก Google Sheets...</p>
         </div>
 
-        <!-- Failure / Error Handling Layout -->
+        <!-- Failure State -->
         <div id="errorState" class="hidden p-8 bg-rose-50 border-2 border-rose-100 rounded-[2.5rem] text-center space-y-4">
             <div class="inline-flex p-4 bg-rose-100 text-rose-600 rounded-full">
                 <i data-lucide="alert-octagon" class="w-8 h-8"></i>
@@ -140,176 +132,308 @@
             <p id="errorMessage" class="text-xs text-rose-600 font-medium max-w-lg mx-auto leading-relaxed">รายละเอียดปัญหาจะถูกสรุปตรงนี้</p>
             <div class="flex flex-col sm:flex-row justify-center gap-3 pt-4">
                 <button onclick="toggleSettingsModal(true)" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold text-xs transition-all">
-                    <i data-lucide="settings" class="w-4 h-4"></i> เปลี่ยนลิงก์เชื่อมต่อ
-                </button>
-                <button onclick="fetchData()" class="inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl font-bold text-xs transition-all">
-                    <i data-lucide="rotate-cw" class="w-4 h-4"></i> ลองหมุนข้อมูลใหม่
+                    <i data-lucide="settings" class="w-4 h-4"></i> ตั้งค่าลิงก์เชื่อมโยงใหม่
                 </button>
             </div>
         </div>
 
-        <!-- Complete Metrics Dashboard Visualizer -->
+        <!-- Dashboard Visualizer -->
         <div id="dashboardContent" class="hidden space-y-6">
             
-            <!-- Summary KPI Grid Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- KPI 1: Ontime Rate -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 card-glow flex items-center gap-5">
-                    <div class="bg-emerald-100 p-4 rounded-2xl text-emerald-600"><i data-lucide="check-circle" class="w-8 h-8"></i></div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Ontime Performance</p>
-                        <h2 id="kpiOntime" class="text-3xl font-black text-slate-800">0%</h2>
-                        <span class="text-[9px] text-slate-400 font-bold">*เทียบงาน ทันแผน / ช้ากว่าแผน</span>
-                    </div>
+            <!-- Section 1: สรุปและเปรียบเทียบผลงานจริงกับแผนการผลิต (Plan vs Actual Balance) -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-2 text-slate-800">
+                    <i data-lucide="bar-chart-3" class="text-blue-600"></i>
+                    <h2 class="font-black text-lg">งบเปรียบเทียบผลผลิตรายวัน (Plan vs Actual Performance)</h2>
                 </div>
-                <!-- KPI 2: Total Meters -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 card-glow flex items-center gap-5">
-                    <div class="bg-blue-100 p-4 rounded-2xl text-blue-600"><i data-lucide="milestone" class="w-8 h-8"></i></div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ระยะทางผลิตสะสม</p>
-                        <h2 id="kpiVolume" class="text-3xl font-black text-slate-800">0 <span class="text-xs font-normal text-slate-400">ม.</span></h2>
-                        <span class="text-[9px] text-slate-400 font-bold">*คำนวณสุทธิจากหัวข้อ ความยาวทั้งหมด</span>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- KPI: จำนวนออเดอร์ -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 card-glow space-y-3 text-left">
+                        <div class="flex justify-between items-center text-slate-400">
+                            <span class="text-xs font-bold uppercase">จำนวนสั่งผลิต (Orders)</span>
+                            <i data-lucide="clipboard-list" class="w-5 h-5 text-blue-500"></i>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <div>
+                                <p class="text-3xl font-black text-slate-800" id="actualJobs">0</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-black text-slate-400" id="planJobs">/ 0</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน</p>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-50">
+                            <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                                <span>อัตราความสำเร็จ (Achievement)</span>
+                                <span id="achieveJobs">0%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                                <div id="barJobs" class="bg-blue-500 h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- KPI 3: Average Speed -->
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 card-glow flex items-center gap-5">
-                    <div class="bg-amber-100 p-4 rounded-2xl text-amber-600"><i data-lucide="zap" class="w-8 h-8"></i></div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ความเร็วเดินหน้าเฉลี่ย</p>
-                        <h2 id="kpiSpeed" class="text-3xl font-black text-slate-800">0 <span class="text-xs font-normal text-slate-400">m/m</span></h2>
-                        <span class="text-[9px] text-slate-400 font-bold">*อ้างอิง AVG_Speed(M/min)</span>
+
+                    <!-- KPI: ระยะทางเมตร -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 card-glow space-y-3 text-left">
+                        <div class="flex justify-between items-center text-slate-400">
+                            <span class="text-xs font-bold uppercase">ระยะทางรวม (Meters)</span>
+                            <i data-lucide="milestone" class="w-5 h-5 text-indigo-500"></i>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <div>
+                                <p class="text-3xl font-black text-slate-800" id="actualMeters">0 <span class="text-xs font-normal">ม.</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง (คอลัมน์ M)</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-black text-slate-400" id="planMeters">/ 0 <span class="text-xs font-normal">ม.</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน</p>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-50">
+                            <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                                <span id="diffMeters">Diff: -0 ม.</span>
+                                <span id="achieveMeters">0%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                                <div id="barMeters" class="bg-indigo-500 h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- KPI 4: Total Weight & Area -->
-                <div class="bg-slate-900 p-6 rounded-[2rem] card-glow flex items-center gap-5 text-white col-span-1">
-                    <div class="bg-white/10 p-4 rounded-2xl text-blue-400"><i data-lucide="layers" class="w-8 h-8"></i></div>
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">น้ำหนักรวมทั้งหมด</p>
-                        <h2 id="kpiWeight" class="text-3xl font-black">0 <span class="text-xs font-normal text-slate-400">กก.</span></h2>
-                        <p id="kpiArea" class="text-[10px] text-slate-400 font-bold">พื้นที่ผลิตสะสม: 0 ตรม.</p>
+
+                    <!-- KPI: น้ำหนัก กก -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 card-glow space-y-3 text-left">
+                        <div class="flex justify-between items-center text-slate-400">
+                            <span class="text-xs font-bold uppercase">น้ำหนักรวม (Weight/KG)</span>
+                            <i data-lucide="weight" class="w-5 h-5 text-amber-500"></i>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <div>
+                                <p class="text-3xl font-black text-slate-800" id="actualWeight">0 <span class="text-xs font-normal">กก.</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-black text-slate-400" id="planWeight">/ 0 <span class="text-xs font-normal">กก.</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ K)</p>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-50">
+                            <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                                <span id="diffWeight">Diff: -0 กก.</span>
+                                <span id="achieveWeight">0%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                                <div id="barWeight" class="bg-amber-500 h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI: พื้นที่ ตร.ม -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 card-glow space-y-3 text-left">
+                        <div class="flex justify-between items-center text-slate-400">
+                            <span class="text-xs font-bold uppercase">พื้นที่รวม (Area/SQM)</span>
+                            <i data-lucide="layout" class="w-5 h-5 text-emerald-500"></i>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <div>
+                                <p class="text-3xl font-black text-slate-800" id="actualArea">0 <span class="text-xs font-normal">ตร.ม.</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-black text-slate-400" id="planArea">/ 0 <span class="text-xs font-normal">ตร.ม.</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ J)</p>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-50">
+                            <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                                <span id="diffArea">Diff: -0 ตร.ม.</span>
+                                <span id="achieveArea">0%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                                <div id="barArea" class="bg-emerald-500 h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI: เวลาผลิตรวม -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 card-glow space-y-3 text-left">
+                        <div class="flex justify-between items-center text-slate-400">
+                            <span class="text-xs font-bold uppercase">เวลาดำเนินงานรวม (Time/Min)</span>
+                            <i data-lucide="clock" class="w-5 h-5 text-purple-500"></i>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <div>
+                                <p class="text-3xl font-black text-slate-800" id="actualTime">0 <span class="text-xs font-normal">นาที</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-black text-slate-400" id="planTime">/ 0 <span class="text-xs font-normal">นาที</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ H)</p>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-50">
+                            <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                                <span id="diffTime">Diff: -0 นาที</span>
+                                <span id="achieveTime">0%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                                <div id="barTime" class="bg-purple-500 h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI: สปีดเฉลี่ย -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 card-glow space-y-3 text-left">
+                        <div class="flex justify-between items-center text-slate-400">
+                            <span class="text-xs font-bold uppercase">ความเร็วเดินเครื่องเฉลี่ย (Speed)</span>
+                            <i data-lucide="zap" class="w-5 h-5 text-rose-500"></i>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <div>
+                                <p class="text-3xl font-black text-slate-800" id="actualSpeed">0 <span class="text-xs font-normal">m/min</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">เฉลี่ยที่เดินเครื่องจริง</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-black text-slate-400" id="planSpeed">/ 0 <span class="text-xs font-normal">m/min</span></p>
+                                <p class="text-[10px] text-slate-400 font-bold">แผนเฉลี่ย (M ยาว / H เวลา)</p>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-50">
+                            <div class="flex justify-between text-[11px] font-bold text-slate-500">
+                                <span id="diffSpeed">สเปกต่างกัน: 0%</span>
+                                <span id="achieveSpeed">0%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
+                                <div id="barSpeed" class="bg-rose-500 h-full rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- NEW SECTION: รายงานสถิติติดตามงานค้างสะสม (Backlog / Delayed Work Summary) -->
-            <div class="bg-amber-50/50 border border-amber-200/60 p-6 rounded-[2.2rem] card-glow space-y-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <div class="p-2.5 bg-amber-100 text-amber-700 rounded-xl">
-                            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+            <!-- Section 2: รายงานวิเคราะห์งานตามแผนงานที่ยังไม่ได้ผลิตในวันนั้น (Missed Plan Backlog) -->
+            <div class="bg-amber-50/50 border border-amber-200 p-6 rounded-[2.2rem] card-glow space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="p-2.5 bg-amber-500 text-white rounded-xl shadow-md">
+                            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
                         </div>
                         <div class="text-left">
-                            <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานสถิติติดตามงานค้าง (Backlog / งานตกค้างจากวันก่อน)</h3>
-                            <p class="text-[11px] text-slate-400 font-medium">คำนวณสะสมตามวันกะจากออเดอร์ที่มีประเภทงาน "งานตกค้าง/ผลิตไม่ทันจากวันก่อน"</p>
+                            <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานวิเคราะห์งานแผนที่ "ค้างผลิต" (Planned Jobs NOT Produced on Date)</h3>
+                            <p class="text-[11px] text-slate-500 font-medium">คำนวณจากใบออเดอร์ที่มีรายชื่อในแผนการผลิตของวันที่เลือก แต่ยังไม่มีการบันทึกเครื่องผลิตจริง</p>
                         </div>
                     </div>
-                    <span class="px-3 py-1 bg-amber-100 text-amber-800 text-[10px] font-black rounded-full uppercase">ยอดค้างสะสม</span>
+                    <span id="backlogSummaryCount" class="px-3 py-1.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded-xl">ยอดค้างผลิต: 0 งาน</span>
                 </div>
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
                     <!-- เมตรค้าง -->
-                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm text-left">
-                        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="milestone" class="w-5 h-5"></i></div>
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
+                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="milestone" class="w-4 h-4"></i></div>
                         <div>
                             <p class="text-[9px] font-bold text-slate-400 uppercase">ระยะทางค้าง</p>
-                            <h4 id="backlogMeters" class="text-base md:text-lg font-black text-slate-700">0 ม.</h4>
+                            <h4 id="backlogMeters" class="text-sm font-black text-slate-700">0 ม.</h4>
                         </div>
                     </div>
                     <!-- ตารางเมตรค้าง -->
-                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm text-left">
-                        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="layout" class="w-5 h-5"></i></div>
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
+                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="layout" class="w-4 h-4"></i></div>
                         <div>
                             <p class="text-[9px] font-bold text-slate-400 uppercase">พื้นที่ค้าง</p>
-                            <h4 id="backlogSqm" class="text-base md:text-lg font-black text-slate-700">0 ตร.ม.</h4>
+                            <h4 id="backlogSqm" class="text-sm font-black text-slate-700">0 ตร.ม.</h4>
                         </div>
                     </div>
                     <!-- น้ำหนักค้าง -->
-                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm text-left">
-                        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="weight" class="w-5 h-5"></i></div>
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
+                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="weight" class="w-4 h-4"></i></div>
                         <div>
                             <p class="text-[9px] font-bold text-slate-400 uppercase">น้ำหนักค้าง</p>
-                            <h4 id="backlogWeight" class="text-base md:text-lg font-black text-slate-700">0 กก.</h4>
+                            <h4 id="backlogWeight" class="text-sm font-black text-slate-700">0 กก.</h4>
                         </div>
                     </div>
-                    <!-- นาทีค้าง -->
-                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm text-left">
-                        <div class="p-3 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="clock" class="w-5 h-5"></i></div>
+                    <!-- เวลาค้าง -->
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
+                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="clock" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">เวลาดำเนินการค้าง</p>
-                            <h4 id="backlogMinutes" class="text-base md:text-lg font-black text-rose-600">0 นาที</h4>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">เวลาผลิตค้าง</p>
+                            <h4 id="backlogMinutes" class="text-sm font-black text-slate-700">0 นาที</h4>
                         </div>
+                    </div>
+                    <!-- สปีดเฉลี่ยของแผนที่ค้าง -->
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left col-span-2 lg:col-span-1">
+                        <div class="p-2.5 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="zap" class="w-4 h-4"></i></div>
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">ความเร็วแผนค้าง</p>
+                            <h4 id="backlogSpeed" class="text-sm font-black text-rose-600">0 m/m</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Table of Missed Plan Jobs -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b border-slate-100 text-left">
+                        <h4 class="text-xs font-black text-slate-700">รายชื่อใบงานในแผนที่ "ค้างส่งผลิต" วันนี้</h4>
+                    </div>
+                    <div class="overflow-x-auto max-h-60 custom-scrollbar">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-900 text-white font-black uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-3">เลขที่ใบออเดอร์ (PO/Order No)</th>
+                                    <th class="p-3">ชื่อลูกค้า</th>
+                                    <th class="p-3">ชื่อสินค้า</th>
+                                    <th class="p-3 text-right">ความยาวแผน (เมตร)</th>
+                                    <th class="p-3 text-right">น้ำหนักแผน (กก.)</th>
+                                    <th class="p-3 text-right">พื้นที่แผน (ตร.ม.)</th>
+                                    <th class="p-3 text-right">เวลาแผน (นาที)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="backlogTableBody" class="divide-y divide-slate-100 font-bold text-slate-600">
+                                <!-- Dynamic Backlog list rendering -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Interruption & Stopping Analysis -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between text-left">
-                    <div class="flex items-center gap-3">
-                        <div class="p-3 bg-red-100 text-red-600 rounded-xl"><i data-lucide="octagon-pause" class="w-5 h-5"></i></div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase">เวลาหยุดรวม (Downtime)</p>
-                            <h4 id="kpiLossTime" class="text-lg font-black text-slate-700">0 นาที</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between text-left">
-                    <div class="flex items-center gap-3">
-                        <div class="p-3 bg-rose-100 text-rose-600 rounded-xl"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase">จำนวนครั้งที่เครื่องหยุด</p>
-                            <h4 id="kpiStopCount" class="text-lg font-black text-slate-700">0 ครั้ง</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between col-span-1 md:col-span-2 lg:col-span-1 text-left">
-                    <div class="flex items-center gap-3">
-                        <div class="p-3 bg-purple-100 text-purple-600 rounded-xl"><i data-lucide="file-check-2" class="w-5 h-5"></i></div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase">จำนวนใบสั่งผลิต (Jobs)</p>
-                            <h4 id="kpiJobsCount" class="text-lg font-black text-slate-700">0 ออเดอร์</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts & Visualization Panels -->
+            <!-- Section 3: Charts & Analytics (Ontime & Comparisons) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Chart 1: Ontime Doughnut -->
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow flex flex-col justify-between">
                     <div>
-                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="pie-chart" class="text-blue-500"></i> สัดส่วนความตรงต่อเวลา</h3>
-                        <p class="text-xs text-slate-400 font-medium text-left">แบ่งกลุ่มใบสั่งผลิตตามประเภทสถานะความรวดเร็ว</p>
+                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="pie-chart" class="text-blue-500"></i> สัดส่วนความตรงต่อเวลา (กะทำงานจริง)</h3>
+                        <p class="text-xs text-slate-400 font-medium text-left">แบ่งกลุ่มใบสั่งผลิตจริงตามสถานะความรวดเร็ว</p>
                     </div>
                     <div class="h-60 flex justify-center items-center mt-4">
                         <canvas id="chartOntime"></canvas>
                     </div>
                 </div>
-                <!-- Chart 2: Speed Line Profile (Dynamic Trend) -->
+                <!-- Chart 2: Plan vs Actual Volume Chart -->
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow lg:col-span-2 flex flex-col justify-between">
                     <div>
-                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="activity" class="text-blue-500"></i> แนวโน้มความเร็วตามใบสั่งผลิต (Speed Trend)</h3>
-                        <p class="text-xs text-slate-400 font-medium text-left">ความเร็วเดินเครื่องเฉลี่ย (AVG_Speed) ของแต่ละ Wo. No. ตามลำดับเวลาการผลิตจริง</p>
+                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="activity" class="text-blue-500"></i> กราฟแนวโน้มปริมาณการผลิตเทียบแผนงาน</h3>
+                        <p class="text-xs text-slate-400 font-medium text-left">เปรียบเทียบระหว่างความยาวเมตรตามแผน และความยาวที่ผลิตได้จริงรายวัน</p>
                     </div>
                     <div class="h-60 mt-4">
-                        <canvas id="chartSpeedProfile"></canvas>
+                        <canvas id="chartPlanActualCompare"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Detailed Raw Table Grid -->
+            <!-- Section 4: รายงานบันทึกการผลิต YUELI รายบรรทัด (Production Raw Table) -->
             <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div class="text-left">
-                        <h3 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="table" class="text-blue-500"></i> บันทึกรายงานการผลิต YUELI รายบรรทัด</h3>
-                        <p class="text-xs text-slate-400 font-medium">ข้อมูลประมวลผลดึงค่าสดจากฐานสเปรดชีตของคุณโดยตรง</p>
+                        <h3 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="table" class="text-blue-500"></i> บันทึกรายงานการผลิตจริง รายบรรทัด (Actual Production Lines)</h3>
+                        <p class="text-xs text-slate-400 font-medium">ข้อมูลประมวลผลดึงจาก Google Sheets แถบตารางผลิตจริง</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                         <div class="relative w-full sm:w-64">
                             <i data-lucide="search" class="w-4 h-4 absolute left-4 top-3.5 text-slate-400"></i>
-                            <input id="searchInput" oninput="filterData()" type="text" placeholder="พิมพ์ Wo. No. เพื่อค้นหา..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                            <input id="searchInput" oninput="filterData()" type="text" placeholder="พิมพ์เลขที่ออร์เดอร์เพื่อค้นหา..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <button onclick="exportToCSV()" class="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 rounded-xl font-bold text-xs transition-all">
-                            <i data-lucide="download" class="w-4 h-4"></i> ส่งออกข้อมูล (CSV)
+                            <i data-lucide="download" class="w-4 h-4"></i> ส่งออกข้อมูลผลิต (CSV)
                         </button>
                     </div>
                 </div>
@@ -341,7 +465,7 @@
                 <!-- Pagination Details -->
                 <div class="flex justify-between items-center mt-4 text-xs font-bold text-slate-400 px-2">
                     <span id="rowCount">แสดงผลทั้งหมด: 0 รายการ</span>
-                    <span id="dataStatus" class="flex items-center gap-1"><span class="w-2 h-2 bg-emerald-500 rounded-full inline-block animate-pulse"></span> ข้อมูลพร้อมใช้งาน</span>
+                    <span id="dataStatus" class="flex items-center gap-1"><span class="w-2 h-2 bg-emerald-500 rounded-full inline-block animate-pulse"></span> ข้อมูลสดพร้อมใช้งาน</span>
                 </div>
             </div>
 
@@ -350,21 +474,26 @@
     </div>
 
     <script>
-        // ใช้ลิงก์ที่ระบุแถบตารางเฉพาะเจาะจงที่ผู้ใช้ให้มาเป็นค่าตั้งต้นเริ่มต้น
-        const defaultCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=1750235965&single=true&output=csv";
-        let rawRecords = [];
-        let ontimeChart = null;
-        let speedProfileChart = null;
+        // ลิงก์เริ่มต้นที่ระบุ Gid ของทั้งฝั่ง Plan และ Production ของคุณ
+        const defaultProductionUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=1750235965&single=true&output=csv";
+        const defaultPlanUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=692364592&single=true&output=csv";
 
-        // แปลงรูปแบบลิงก์ให้อยู่ในรูปแบบ CSV API เสมอ
-        function cleanSheetUrl(url) {
-            if (!url) return defaultCsvUrl;
+        let rawProductionRecords = [];
+        let rawPlanRecords = [];
+        
+        let ontimeChart = null;
+        let comparisonChart = null;
+
+        // ฟังก์ชันช่วยแปลงและยืนยัน Format ลิงก์ CSV
+        function cleanSheetUrl(url, defaultUrl) {
+            if (!url) return defaultUrl;
             url = String(url).trim();
-            
             const dMatch = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
             if (dMatch && !url.includes('/d/e/')) {
                 const id = dMatch[1];
-                return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv`;
+                const gidMatch = url.match(/gid=([0-9]+)/);
+                const gid = gidMatch ? gidMatch[1] : "0";
+                return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
             }
             if (url.includes('/d/e/') && url.includes('/pub')) {
                 if (url.includes('output=')) {
@@ -376,42 +505,52 @@
             return url;
         }
 
-        function getActiveSheetUrl() {
+        function getActiveProductionUrl() {
             const savedUrl = localStorage.getItem('yueli_sheet_url');
-            return savedUrl ? cleanSheetUrl(savedUrl) : defaultCsvUrl;
+            return savedUrl ? cleanSheetUrl(savedUrl, defaultProductionUrl) : defaultProductionUrl;
+        }
+
+        function getActivePlanUrl() {
+            const savedUrl = localStorage.getItem('yueli_plan_url');
+            return savedUrl ? cleanSheetUrl(savedUrl, defaultPlanUrl) : defaultPlanUrl;
         }
 
         function toggleSettingsModal(show) {
             const modal = document.getElementById('settingsModal');
             if (show) {
-                document.getElementById('sheetUrlInput').value = localStorage.getItem('yueli_sheet_url') || defaultCsvUrl;
+                document.getElementById('sheetUrlInput').value = localStorage.getItem('yueli_sheet_url') || defaultProductionUrl;
+                document.getElementById('planUrlInput').value = localStorage.getItem('yueli_plan_url') || defaultPlanUrl;
                 modal.classList.remove('hidden');
             } else {
                 modal.classList.add('hidden');
             }
         }
 
-        function saveCustomSheetUrl() {
-            const inputVal = document.getElementById('sheetUrlInput').value.trim();
-            if (inputVal) {
-                localStorage.setItem('yueli_sheet_url', inputVal);
-                showToast("บันทึกการตั้งค่าแล้ว กำลังเริ่มรีโหลดข้อมูล...", "success");
+        function saveCustomSheetUrls() {
+            const prodUrlVal = document.getElementById('sheetUrlInput').value.trim();
+            const planUrlVal = document.getElementById('planUrlInput').value.trim();
+            
+            if (prodUrlVal && planUrlVal) {
+                localStorage.setItem('yueli_sheet_url', prodUrlVal);
+                localStorage.setItem('yueli_plan_url', planUrlVal);
+                showToast("บันทึกการเชื่อมต่อแล้ว กำลังรีโหลดข้อมูลทั้งหมด...", "success");
                 toggleSettingsModal(false);
                 fetchData();
             } else {
-                showToast("กรุณาระบุลิงก์ให้ถูกต้อง", "error");
+                showToast("กรุณากรอกลิงก์ข้อมูลให้ครบถ้วน", "error");
             }
         }
 
-        // ค้นหาหัวตารางที่มีความยืดหยุ่นสูง เพื่อป้องกันสระเพี้ยนหรือรูปแบบตัวพิมพ์ที่ต่างกัน
+        // ค้นหาหัวตารางแบบยืดหยุ่น ป้องกันปัญหาเรื่องสระเพี้ยนหรือพิมพ์เล็กพิมพ์ใหญ่
         function getFlexVal(row, possibleKeys, defaultVal = "") {
             if (!row) return defaultVal;
             for (let k of possibleKeys) {
                 if (!k) continue;
-                const searchKey = String(k).replace(/[\s\(\)\.\/]/g, '').trim().toLowerCase();
+                // ตัดช่องว่าง วงเล็บ เครื่องหมายพิเศษทั้งหมดเพื่อหา Keyword
+                const searchKey = String(k).replace(/[\s\(\)\.\/\n\r\\"]/g, '').trim().toLowerCase();
                 for (let actualKey in row) {
                     if (!actualKey) continue;
-                    const compKey = String(actualKey).replace(/[\s\(\)\.\/]/g, '').trim().toLowerCase();
+                    const compKey = String(actualKey).replace(/[\s\(\)\.\/\n\r\\"]/g, '').trim().toLowerCase();
                     if (compKey === searchKey || compKey.includes(searchKey)) {
                         return row[actualKey] !== undefined && row[actualKey] !== null ? String(row[actualKey]) : defaultVal;
                     }
@@ -420,7 +559,48 @@
             return defaultVal;
         }
 
-        // Custom CSV Parser
+        // แปลงเวลาแบบ 0:03:44 หรือ 27 ให้เป็นนาทีจำนวนจริง
+        function parseTimeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            timeStr = String(timeStr).trim();
+            if (timeStr.includes(':')) {
+                const parts = timeStr.split(':').map(Number);
+                if (parts.length === 3) {
+                    return (parts[0] * 60) + parts[1] + (parts[2] / 60);
+                } else if (parts.length === 2) {
+                    return parts[0] + (parts[1] / 60);
+                }
+            }
+            const val = parseFloat(timeStr);
+            return isNaN(val) ? 0 : val;
+        }
+
+        // ปรับแต่งและรวมรูปแบบวันที่ให้อยู่ในรูปแบบเดียวกัน (เช่น "15/5/2026")
+        function normalizeDate(dateStr) {
+            if (!dateStr) return "";
+            dateStr = String(dateStr).trim();
+            if (dateStr.includes('/')) {
+                let parts = dateStr.split('/');
+                if (parts.length === 3) {
+                    let day = parseInt(parts[0], 10);
+                    let month = parseInt(parts[1], 10);
+                    let year = parts[2].trim();
+                    if (year.length === 2) {
+                        year = "20" + year; // แปลง "26" เป็น "2026"
+                    }
+                    return `${day}/${month}/${year}`;
+                }
+            }
+            return dateStr;
+        }
+
+        // ฟังก์ชันล้างรหัสใบงาน เพื่อใช้จับคู่เปรียบเทียบความตรงกัน
+        function normalizeOrderNo(orderStr) {
+            if (!orderStr) return "";
+            return String(orderStr).replace(/[\s\-_]/g, '').toLowerCase().trim();
+        }
+
+        // Custom CSV Parser สำหรับโครงสร้างชีตจาก Google Sheets
         function parseCSV(text) {
             if (!text) return [];
             const rows = [];
@@ -473,116 +653,126 @@
             document.getElementById('errorState').classList.add('hidden');
             document.getElementById('dashboardContent').classList.add('hidden');
 
-            const activeUrl = getActiveSheetUrl();
+            const prodUrl = getActiveProductionUrl();
+            const planUrl = getActivePlanUrl();
 
             try {
-                const response = await fetch(activeUrl);
-                if (!response.ok) throw new Error("ดึงข้อมูลไม่สำเร็จ ลิงก์สเปรดชีตแชร์ไม่ได้รับการยืนยันหรือระบุสิทธิ์ไม่ถูกต้อง");
-                const csvText = await response.text();
-                
-                if (csvText.includes("<!DOCTYPE html>") || csvText.includes("<html")) {
-                    throw new Error("ดึงข้อมูลได้หน้าจอเว็บล็อกอินของ Google แทนที่จะเป็นข้อมูลดิบ กรุณาแชร์ไฟล์แบบ 'เผยแพร่ไปยังเว็บ (Publish to web)' และเลือกเป็นรูปแบบ 'ค่าที่คั่นด้วยจุลภาค (.csv)'");
+                // โหลดข้อมูลแบบขนานจากทั้งสองแหล่ง
+                const [prodResponse, planResponse] = await Promise.all([
+                    fetch(prodUrl),
+                    fetch(planUrl)
+                ]);
+
+                if (!prodResponse.ok || !planResponse.ok) {
+                    throw new Error("ดึงข้อมูลไม่สำเร็จ ลิงก์สเปรดชีตอย่างน้อยหนึ่งแหล่งถูกจำกัดสิทธิ์หรือระบุปลายทางไม่ถูกต้อง");
                 }
 
-                rawRecords = parseCSV(csvText);
+                const [prodCsv, planCsv] = await Promise.all([
+                    prodResponse.text(),
+                    planResponse.text()
+                ]);
 
-                if (rawRecords && rawRecords.length > 0) {
-                    populateFilterOptions(rawRecords);
-                    renderDashboard(rawRecords);
-                    showToast("อัปเดตข้อมูลความคืบหน้าเรียลไทม์สำเร็จ!", "success");
+                rawProductionRecords = parseCSV(prodCsv);
+                rawPlanRecords = parseCSV(planCsv);
+
+                if (rawProductionRecords.length > 0 && rawPlanRecords.length > 0) {
+                    populateFilterOptions(rawProductionRecords, rawPlanRecords);
+                    filterData();
+                    showToast("ดึงและจับคู่ข้อมูลทั้งสองชีตเสร็จสมบูรณ์!", "success");
                     document.getElementById('dashboardContent').classList.remove('hidden');
                 } else {
-                    throw new Error("ไม่พบรายการข้อมูลในตารางความคืบหน้า หรือหัวตารางของไฟล์ไม่ตรงกับมาตรฐานเครื่องจักร");
+                    throw new Error("ข้อมูลในแผ่นงานว่างเปล่า หรือหัวตารางไม่ตรงตามมาตรฐาน");
                 }
+
             } catch (error) {
                 console.error(error);
                 document.getElementById('errorMessage').innerText = error.message;
                 document.getElementById('errorState').classList.remove('hidden');
-                showToast("การดึงข้อมูลผิดพลาด", "error");
+                showToast("การเชื่อมต่อข้อมูลเกิดข้อผิดพลาด", "error");
             } finally {
                 document.getElementById('loadingState').classList.add('hidden');
                 lucide.createIcons();
             }
         }
 
-        function populateFilterOptions(records) {
+        // นำเข้าวันที่จากทั้งสองตารางเพื่อทำตัวกรองเดียวแบบไร้รอยต่อ
+        function populateFilterOptions(prodRecords, planRecords) {
             const dateSelect = document.getElementById('dateFilter');
             dateSelect.innerHTML = '<option value="all">ทุกวันที่ผลิต</option>';
             
-            const uniqueDates = [...new Set(records.map(r => getFlexVal(r, ["วันที่", "date"])).filter(Boolean))];
-            uniqueDates.forEach(date => {
+            const rawDates = [
+                ...prodRecords.map(r => getFlexVal(r, ["วันที่", "date"])),
+                ...planRecords.map(r => getFlexVal(r, ["วันที่", "date"]))
+            ];
+            
+            const normalizedUniqueDates = [...new Set(rawDates.map(normalizeDate).filter(Boolean))];
+            
+            // เรียงลำดับวันที่จากอนาคตลงไปอดีต
+            normalizedUniqueDates.sort((a,b) => {
+                const parseDate = s => {
+                    const parts = s.split('/');
+                    return new Date(parts[2], parts[1]-1, parts[0]);
+                };
+                return parseDate(b) - parseDate(a);
+            });
+
+            normalizedUniqueDates.forEach(date => {
                 const opt = document.createElement('option');
                 opt.value = date;
                 opt.innerText = date;
                 dateSelect.appendChild(opt);
             });
-        }
 
-        function showToast(msg, type) {
-            const toast = document.getElementById('toast');
-            const icon = document.getElementById('toast-icon');
-            const text = document.getElementById('toast-message');
-
-            icon.innerText = type === "success" ? "✅" : "❌";
-            text.innerText = msg;
-            toast.classList.remove('hidden');
-            
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 3000);
+            // เลือกวันที่ล่าสุดเป็นค่าเริ่มต้นหากมีข้อมูล
+            if (normalizedUniqueDates.length > 0) {
+                dateSelect.value = normalizedUniqueDates[0];
+            }
         }
 
         function filterData() {
             const dateVal = document.getElementById('dateFilter').value;
-            const shiftVal = document.getElementById('shiftFilter').value;
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
 
-            const filtered = rawRecords.filter(row => {
-                const rDate = getFlexVal(row, ["วันที่", "date"]);
-                const rShift = getFlexVal(row, ["กะ", "shift"]);
+            // คัดกรองชีตผลิตจริง
+            const filteredProd = rawProductionRecords.filter(row => {
+                const rDate = normalizeDate(getFlexVal(row, ["วันที่", "date"]));
                 const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"]).toLowerCase();
-
+                
                 const matchDate = (dateVal === "all" || rDate === dateVal);
-                const matchShift = (shiftVal === "all" || rShift === shiftVal);
                 const matchSearch = (searchVal === "" || rWo.includes(searchVal));
-
-                return matchDate && matchShift && matchSearch;
+                return matchDate && matchSearch;
             });
 
-            renderDashboard(filtered);
+            // คัดกรองชีตแผนงาน
+            const filteredPlan = rawPlanRecords.filter(row => {
+                const rDate = normalizeDate(getFlexVal(row, ["วันที่", "date"]));
+                const matchDate = (dateVal === "all" || rDate === dateVal);
+                return matchDate;
+            });
+
+            renderDashboard(filteredProd, filteredPlan, dateVal);
             lucide.createIcons();
         }
 
-        function renderDashboard(records) {
-            let totalMeters = 0;
-            let totalWeight = 0;
-            let totalArea = 0;
-            let totalSpeedSum = 0;
-            let speedCount = 0;
-            
-            let totalLossSec = 0;
-            let totalStopsCount = 0;
-
-            // ค่านับสะสมสำหรับรายงาน "งานค้างตกค้าง"
-            let backlogMeters = 0;
-            let backlogSqm = 0;
-            let backlogWeight = 0;
-            let backlogProdSec = 0;
-
-            const ontimeCounts = { "ทันแผน": 0, "ช้ากว่าแผน": 0, "นอกแผน": 0 };
-            const speedProfileData = [];
+        function renderDashboard(recordsProd, recordsPlan, selectedDate) {
+            // --- 1. คำนวณฝั่งผลิตจริง (Actual Production Stats) ---
+            let actMeters = 0;
+            let actWeight = 0;
+            let actArea = 0;
+            let actTimeSec = 0;
+            let actSpeedSum = 0;
+            let actSpeedCount = 0;
+            let ontimeCounts = { "ทันแผน": 0, "ช้ากว่าแผน": 0, "นอกแผน": 0 };
 
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
 
-            records.forEach(row => {
-                // ดึงข้อมูลตัวเลขจากหัวตารางจริงในภาพ
+            recordsProd.forEach(row => {
                 const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"], "0");
                 const rawWeight = getFlexVal(row, ["นน.ทั้งหมด(กก)", "นน.ทั้งหมด", "น้ำหนัก"], "0");
                 const rawArea = getFlexVal(row, ["พื้นที่.ทั้งหมด(ตรม)", "พื้นที่ทั้งหมด", "พื้นที่"], "0");
                 const rawSpeed = getFlexVal(row, ["AVG_Speed(M/min)", "AVG_Speed", "สปีด"], "0");
-                
-                const rawProdSec = getFlexVal(row, ["เวลาผลิต(วินาที)", "เวลาผลิต", "เวลาผลิตวินาที"], "0");
+                const rawProdSec = getFlexVal(row, ["เวลาผลิต(วินาที)", "เวลาผลิต"], "0");
                 const rawLossSec = getFlexVal(row, ["เวลาที่หยุด"], "0");
                 const rawStops = getFlexVal(row, ["จำนวนครั้งที่หยุด"], "0");
 
@@ -590,41 +780,24 @@
                 const weight = parseFloat(String(rawWeight).replace(/,/g, '')) || 0;
                 const area = parseFloat(String(rawArea).replace(/,/g, '')) || 0;
                 const speed = parseFloat(String(rawSpeed).replace(/,/g, '')) || 0;
-                
-                const prodTimeMin = Math.round((parseFloat(String(rawProdSec).replace(/,/g, '')) || 0) / 60);
-                const lossTimeMin = Math.round((parseFloat(String(rawLossSec).replace(/,/g, '')) || 0) / 60);
-                const stopsCount = parseInt(String(rawStops).replace(/,/g, '')) || 0;
+                const prodSec = parseFloat(String(rawProdSec).replace(/,/g, '')) || 0;
 
-                totalMeters += meters;
-                totalWeight += weight;
-                totalArea += area;
-                totalLossSec += (parseFloat(String(rawLossSec).replace(/,/g, '')) || 0);
-                totalStopsCount += stopsCount;
+                actMeters += meters;
+                actWeight += weight;
+                actArea += area;
+                actTimeSec += prodSec;
 
                 if (speed > 0) {
-                    totalSpeedSum += speed;
-                    speedCount++;
+                    actSpeedSum += speed;
+                    actSpeedCount++;
                 }
 
-                // ดึงข้อมูลและสะสมสถานะ Ontime
                 let ontimeStatus = getFlexVal(row, ["สถานะ Ontime", "สถานะ"], "นอกแผน").trim();
-                if (!ontimeStatus || ontimeStatus === "") ontimeStatus = "นอกแผน";
+                if (!ontimeStatus) ontimeStatus = "นอกแผน";
                 if (ontimeCounts.hasOwnProperty(ontimeStatus)) {
                     ontimeCounts[ontimeStatus]++;
                 } else {
                     ontimeCounts["นอกแผน"]++;
-                }
-
-                let jobType = getFlexVal(row, ["จำแนกประเภทงาน", "ประเภทงาน"], "งานแทรกด่วนนอกแผน").trim();
-                if (!jobType || jobType === "") jobType = "งานแทรกด่วนนอกแผน";
-
-                // ปรับปรุงเงื่อนไขงานค้าง: คัดกรองจากประเภทงาน "งานตกค้าง/ผลิตไม่ทันจากวันก่อน" ตามที่ระบุ
-                if (jobType === "งานตกค้าง/ผลิตไม่ทันจากวันก่อน") {
-                    backlogMeters += meters;
-                    backlogSqm += area;
-                    backlogWeight += weight;
-                    // ความเร็วที่ล่าช้า/เสียเวลารวมนาที (เวลาที่เครื่องทำงานจริงและเวลาหยุดพัก)
-                    backlogProdSec += (parseFloat(String(rawProdSec).replace(/,/g, '')) || 0) + (parseFloat(String(rawLossSec).replace(/,/g, '')) || 0);
                 }
 
                 const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"], "-");
@@ -632,23 +805,20 @@
                 const rDate = getFlexVal(row, ["วันที่", "date"], "-");
                 const rStart = getFlexVal(row, ["เวลาเริ่ม", "start_time"], "-");
                 const rEnd = getFlexVal(row, ["เวลาสิ้นสุด", "end_time"], "-");
+                const rJobType = getFlexVal(row, ["จำแนกประเภทงาน", "ประเภทงาน"], "-");
 
-                // บันทึกโปรไฟล์ความเร็วเพื่อทำกราฟ Trend ตามใบงาน
-                if (rWo !== "-") {
-                    speedProfileData.push({ wo: rWo, speed: speed });
-                }
+                const prodTimeMin = Math.round(prodSec / 60);
+                const lossTimeMin = Math.round((parseFloat(String(rawLossSec).replace(/,/g, '')) || 0) / 60);
+                const stopsCount = parseInt(String(rawStops).replace(/,/g, '')) || 0;
 
-                // สรุปเวลาแสดงผลช่วงเริ่ม/สิ้นสุดแบบสั้น
-                const startShort = rStart.includes(" ") ? rStart.split(" ")[1] : rStart;
-                const endShort = rEnd.includes(" ") ? rEnd.split(" ")[1] : rEnd;
-
+                // เรนเดอร์ลงในตารางหลัก
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-all";
                 tr.innerHTML = `
                     <td class="p-4 font-bold text-slate-800">${rWo}</td>
                     <td class="p-4 text-center font-bold text-slate-500">${rShift}</td>
                     <td class="p-4 text-center text-slate-400 font-bold">${rDate}</td>
-                    <td class="p-4 text-center font-mono text-slate-500 text-[11px]">${startShort} - ${endShort}</td>
+                    <td class="p-4 text-center font-mono text-slate-500 text-[11px]">${rStart} - ${rEnd}</td>
                     <td class="p-4 text-right font-black text-slate-700">${prodTimeMin} น.</td>
                     <td class="p-4 text-right font-black text-slate-700">${lossTimeMin} น.</td>
                     <td class="p-4 text-center font-black text-slate-700">${stopsCount} ครั้ง</td>
@@ -658,10 +828,9 @@
                     <td class="p-4 text-right font-black text-slate-700">${area.toLocaleString()}</td>
                     <td class="p-4 text-center">
                         <span class="px-3 py-1 rounded-full text-[10px] font-black ${
-                            jobType.includes("ตรงตามแผน") ? 'bg-blue-100 text-blue-700' :
-                            jobType.includes("แทรก") ? 'bg-amber-100 text-amber-700' :
-                            jobType.includes("ตกค้าง") ? 'bg-rose-100 text-rose-700' : 'bg-purple-100 text-purple-700'
-                        }">${jobType}</span>
+                            rJobType.includes("ตรงตามแผน") ? 'bg-blue-100 text-blue-700' :
+                            rJobType.includes("แทรก") ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700'
+                        }">${rJobType}</span>
                     </td>
                     <td class="p-4 text-center">
                         <span class="px-3 py-1.5 rounded-xl text-[10px] font-black ${
@@ -673,38 +842,170 @@
                 tableBody.appendChild(tr);
             });
 
-            // คำนวณภาพรวม KPI
-            const avgSpeed = speedCount > 0 ? (totalSpeedSum / speedCount) : 0;
+            // --- 2. คำนวณฝั่งแผนการผลิต (Plan Schedule Stats) ---
+            let planMeters = 0;
+            let planWeight = 0;
+            let planArea = 0;
+            let planTimeMin = 0;
+            let planJobsCount = recordsPlan.length;
+
+            recordsPlan.forEach(p => {
+                const pMeters = parseFloat(String(getFlexVal(p, ["ยาวเมตร", "ความยาว"])).replace(/,/g, '')) || 0;
+                const pWeight = parseFloat(String(getFlexVal(p, ["น้ำหนัก (KG)", "น้ำหนัก"])).replace(/,/g, '')) || 0;
+                const pArea = parseFloat(String(getFlexVal(p, ["พื้นที่ (m2)", "พื้นที่"])).replace(/,/g, '')) || 0;
+                const pTime = parseTimeToMinutes(getFlexVal(p, ["Time (Min)", "Time"]));
+
+                planMeters += pMeters;
+                planWeight += pWeight;
+                planArea += pArea;
+                planTimeMin += pTime;
+            });
+
+            // คำนวณความเร็วเป้าหมายของแผน (สปีดแผน = เมตรแผน / เวลาแผน)
+            const calculatedPlanSpeed = planTimeMin > 0 ? (planMeters / planTimeMin) : 0;
+            const actualAvgSpeed = actSpeedCount > 0 ? (actSpeedSum / actSpeedCount) : 0;
+            const actualAvgTimeMin = Math.round(actTimeSec / 60);
+
+            // --- 3. ตรวจสอบงานแผนค้างที่ไม่ได้ผลิตในวันนั้น (Missed Plan Backlog Logic) ---
+            // สร้าง Set ของเลขที่ใบสั่งผลิตที่มีการผลิตจริงในวันนี้ เพื่อการจับคู่ที่เร็วขึ้น
+            const producedOrdersSet = new Set(
+                recordsProd.map(r => normalizeOrderNo(getFlexVal(r, ["Wo. No.", "WoNo", "ออร์เดอร์"])))
+            );
+
+            let backlogCount = 0;
+            let backlogMetersSum = 0;
+            let backlogAreaSum = 0;
+            let backlogWeightSum = 0;
+            let backlogTimeSum = 0;
+
+            const backlogTableBody = document.getElementById('backlogTableBody');
+            backlogTableBody.innerHTML = '';
+
+            recordsPlan.forEach(p => {
+                const poNo = getFlexVal(p, ["Prod Order No", "Prod  Order No", "เลขที่ PO", "ออร์เดอร์", "Wo. No."]);
+                const cleanPo = normalizeOrderNo(poNo);
+
+                // หากแผนงานชุดนี้ "ไม่มี" รหัสการผลิตจริงในวันนี้ -> เป็นงานตกค้างที่ผลิตไม่ทัน
+                if (cleanPo && !producedOrdersSet.has(cleanPo)) {
+                    const pMeters = parseFloat(String(getFlexVal(p, ["ยาวเมตร"])).replace(/,/g, '')) || 0;
+                    const pWeight = parseFloat(String(getFlexVal(p, ["น้ำหนัก (KG)"])).replace(/,/g, '')) || 0;
+                    const pArea = parseFloat(String(getFlexVal(p, ["พื้นที่ (m2)"])).replace(/,/g, '')) || 0;
+                    const pTime = parseTimeToMinutes(getFlexVal(p, ["Time (Min)", "Time"]));
+
+                    backlogCount++;
+                    backlogMetersSum += pMeters;
+                    backlogWeightSum += pWeight;
+                    backlogAreaSum += pArea;
+                    backlogTimeSum += pTime;
+
+                    const customer = getFlexVal(p, ["ชื่อลูกค้า", "ลูกค้า", "customer"], "-");
+                    const product = getFlexVal(p, ["ชื่อสินค้า", "สินค้า"], "-");
+
+                    // เพิ่มรายการเข้าตารางสรุปงานแผนค้าง
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-amber-50/40 transition-all border-b border-slate-100";
+                    tr.innerHTML = `
+                        <td class="p-3 font-bold text-slate-800">${poNo}</td>
+                        <td class="p-3 text-slate-500">${customer}</td>
+                        <td class="p-3 text-slate-400 max-w-xs truncate">${product}</td>
+                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pMeters).toLocaleString()}</td>
+                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pWeight).toLocaleString()}</td>
+                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pArea).toLocaleString()}</td>
+                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pTime)}</td>
+                    `;
+                    backlogTableBody.appendChild(tr);
+                }
+            });
+
+            if (backlogCount === 0) {
+                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! แผนงานของวันนี้ถูกนำเข้ากระบวนการผลิตจนครบทุกใบงาน ไม่พบงานค้างที่ไม่ได้ทำ</td></tr>`;
+            }
+
+            // คำนวณความเร็วเฉลี่ยของแผนงานที่ค้าง
+            const backlogAvgSpeed = backlogTimeSum > 0 ? (backlogMetersSum / backlogTimeSum) : 0;
+
+            // --- 4. แสดงสถิติอัปเดตบนหน้าจอ (UI KPI Updates) ---
+            
+            // อัปเดตค่านับรวมอ้างอิง
+            document.getElementById('actualJobs').innerText = recordsProd.length;
+            document.getElementById('planJobs').innerText = `/ ${planJobsCount}`;
+            const jobAch = planJobsCount > 0 ? ((recordsProd.length / planJobsCount) * 100) : 0;
+            document.getElementById('achieveJobs').innerText = jobAch.toFixed(1) + "%";
+            document.getElementById('barJobs').style.width = Math.min(jobAch, 100) + "%";
+
+            // อัปเดตเมตร
+            document.getElementById('actualMeters').innerHTML = `${Math.round(actMeters).toLocaleString()} <span class="text-xs font-normal">ม.</span>`;
+            document.getElementById('planMeters').innerHTML = `/ ${Math.round(planMeters).toLocaleString()} <span class="text-xs font-normal">ม.</span>`;
+            const metAch = planMeters > 0 ? ((actMeters / planMeters) * 100) : 0;
+            document.getElementById('achieveMeters').innerText = metAch.toFixed(1) + "%";
+            document.getElementById('barMeters').style.width = Math.min(metAch, 100) + "%";
+            const diffM = actMeters - planMeters;
+            document.getElementById('diffMeters').innerText = `Diff: ${diffM >= 0 ? '+' : ''}${Math.round(diffM).toLocaleString()} ม.`;
+            document.getElementById('diffMeters').className = `text-[11px] font-bold ${diffM >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+            // อัปเดตน้ำหนัก กก
+            document.getElementById('actualWeight').innerHTML = `${Math.round(actWeight).toLocaleString()} <span class="text-xs font-normal">กก.</span>`;
+            document.getElementById('planWeight').innerHTML = `/ ${Math.round(planWeight).toLocaleString()} <span class="text-xs font-normal">กก.</span>`;
+            const weiAch = planWeight > 0 ? ((actWeight / planWeight) * 100) : 0;
+            document.getElementById('achieveWeight').innerText = weiAch.toFixed(1) + "%";
+            document.getElementById('barWeight').style.width = Math.min(weiAch, 100) + "%";
+            const diffW = actWeight - planWeight;
+            document.getElementById('diffWeight').innerText = `Diff: ${diffW >= 0 ? '+' : ''}${Math.round(diffW).toLocaleString()} กก.`;
+            document.getElementById('diffWeight').className = `text-[11px] font-bold ${diffW >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+            // อัปเดตพื้นที่ ตรม
+            document.getElementById('actualArea').innerHTML = `${Math.round(actArea).toLocaleString()} <span class="text-xs font-normal">ตร.ม.</span>`;
+            document.getElementById('planArea').innerHTML = `/ ${Math.round(planArea).toLocaleString()} <span class="text-xs font-normal">ตร.ม.</span>`;
+            const areAch = planArea > 0 ? ((actArea / planArea) * 100) : 0;
+            document.getElementById('achieveArea').innerText = areAch.toFixed(1) + "%";
+            document.getElementById('barArea').style.width = Math.min(areAch, 100) + "%";
+            const diffA = actArea - planArea;
+            document.getElementById('diffArea').innerText = `Diff: ${diffA >= 0 ? '+' : ''}${Math.round(diffA).toLocaleString()} ตร.ม.`;
+            document.getElementById('diffArea').className = `text-[11px] font-bold ${diffA >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+            // อัปเดตเวลาผลิตรวม
+            document.getElementById('actualTime').innerHTML = `${actualAvgTimeMin.toLocaleString()} <span class="text-xs font-normal">นาที</span>`;
+            document.getElementById('planTime').innerHTML = `/ ${Math.round(planTimeMin).toLocaleString()} <span class="text-xs font-normal">นาที</span>`;
+            const timAch = planTimeMin > 0 ? ((actualAvgTimeMin / planTimeMin) * 100) : 0;
+            document.getElementById('achieveTime').innerText = timAch.toFixed(1) + "%";
+            document.getElementById('barTime').style.width = Math.min(timAch, 100) + "%";
+            const diffT = actualAvgTimeMin - planTimeMin;
+            document.getElementById('diffTime').innerText = `Diff: ${diffT >= 0 ? '+' : ''}${Math.round(diffT).toLocaleString()} นาที`;
+            document.getElementById('diffTime').className = `text-[11px] font-bold ${diffT >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+            // อัปเดตสปีดเฉลี่ยเปรียบเทียบ
+            document.getElementById('actualSpeed').innerHTML = `${actualAvgSpeed.toFixed(1)} <span class="text-xs font-normal">m/m</span>`;
+            document.getElementById('planSpeed').innerHTML = `/ ${calculatedPlanSpeed.toFixed(1)} <span class="text-xs font-normal">m/m</span>`;
+            const speAch = calculatedPlanSpeed > 0 ? ((actualAvgSpeed / calculatedPlanSpeed) * 100) : 0;
+            document.getElementById('achieveSpeed').innerText = speAch.toFixed(1) + "%";
+            document.getElementById('barSpeed').style.width = Math.min(speAch, 100) + "%";
+            const diffS = actualAvgSpeed - calculatedPlanSpeed;
+            document.getElementById('diffSpeed').innerText = `ส่วนต่าง: ${diffS >= 0 ? '+' : ''}${diffS.toFixed(1)} m/min`;
+            document.getElementById('diffSpeed').className = `text-[11px] font-bold ${diffS >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+            // อัปเดตสรุปข้อมูลใบงานตกค้าง (Missed Plan Backlog Widgets)
+            document.getElementById('backlogSummaryCount').innerText = `ยอดค้างผลิต: ${backlogCount} งาน`;
+            document.getElementById('backlogMeters').innerText = Math.round(backlogMetersSum).toLocaleString() + " ม.";
+            document.getElementById('backlogSqm').innerText = Math.round(backlogAreaSum).toLocaleString() + " ตร.ม.";
+            document.getElementById('backlogWeight').innerText = Math.round(backlogWeightSum).toLocaleString() + " กก.";
+            document.getElementById('backlogMinutes').innerText = Math.round(backlogTimeSum).toLocaleString() + " นาที";
+            document.getElementById('backlogSpeed').innerText = backlogAvgSpeed.toFixed(1) + " m/m";
+
+            // คำนวณเปอร์เซ็นต์ Ontime รายกะ
             const totalScheduledJobs = ontimeCounts["ทันแผน"] + ontimeCounts["ช้ากว่าแผน"];
             const ontimePercent = totalScheduledJobs > 0 ? ((ontimeCounts["ทันแผน"] / totalScheduledJobs) * 100) : 0;
-            const totalLossMin = Math.round(totalLossSec / 60);
 
-            // อัปเดตข้อมูลบน KPI Cards
-            document.getElementById('kpiJobsCount').innerText = `${records.length} ออเดอร์`;
-            document.getElementById('kpiVolume').innerText = Math.round(totalMeters).toLocaleString() + " ม.";
-            document.getElementById('kpiSpeed').innerText = avgSpeed.toFixed(1) + " m/m";
-            document.getElementById('kpiWeight').innerText = Math.round(totalWeight).toLocaleString() + " กก.";
-            document.getElementById('kpiArea').innerText = `พื้นที่ผลิตสะสม: ${Math.round(totalArea).toLocaleString()} ตรม.`;
-            document.getElementById('kpiOntime').innerText = ontimePercent.toFixed(1) + "%";
-            
-            document.getElementById('kpiLossTime').innerText = `${totalLossMin.toLocaleString()} นาที`;
-            document.getElementById('kpiStopCount').innerText = `${totalStopsCount.toLocaleString()} ครั้ง`;
-            document.getElementById('rowCount').innerText = `แสดงผลทั้งหมด: ${records.length} รายการ`;
+            // บันทึกรายงานรวมรายบรรทัด
+            document.getElementById('rowCount').innerText = `แสดงผลข้อมูลผลิตจริง: ${recordsProd.length} รายการ`;
 
-            // อัปเดตข้อมูลรายงานงานค้าง (Backlog Indicators)
-            document.getElementById('backlogMeters').innerText = Math.round(backlogMeters).toLocaleString() + " ม.";
-            document.getElementById('backlogSqm').innerText = Math.round(backlogSqm).toLocaleString() + " ตร.ม.";
-            document.getElementById('backlogWeight').innerText = Math.round(backlogWeight).toLocaleString() + " กก.";
-            document.getElementById('backlogMinutes').innerText = Math.round(backlogProdSec / 60).toLocaleString() + " นาที";
-
-            renderCharts(ontimeCounts, speedProfileData);
+            renderCharts(ontimeCounts, actMeters, planMeters, selectedDate);
         }
 
-        function renderCharts(ontimeData, speedData) {
+        function renderCharts(ontimeData, actMeters, planMeters, dateLabel) {
             if (ontimeChart) ontimeChart.destroy();
-            if (speedProfileChart) speedProfileChart.destroy();
+            if (comparisonChart) comparisonChart.destroy();
 
-            // 1. Doughnut Chart: Ontime Status
+            // 1. Doughnut Chart: Ontime Status (ผลผลิตจริง)
             const ctxOntime = document.getElementById('chartOntime').getContext('2d');
             ontimeChart = new Chart(ctxOntime, {
                 type: 'doughnut',
@@ -729,32 +1030,35 @@
                 }
             });
 
-            // 2. Line Chart: Chronological Speed Profile
-            const labelsSpeed = speedData.map(d => d.wo);
-            const valuesSpeed = speedData.map(d => d.speed);
-
-            const ctxSpeed = document.getElementById('chartSpeedProfile').getContext('2d');
-            speedProfileChart = new Chart(ctxSpeed, {
-                type: 'line',
+            // 2. Bar Chart เปรียบเทียบปริมาณ เมตร ของแผนงาน VS ผลิตจริง
+            const ctxComp = document.getElementById('chartPlanActualCompare').getContext('2d');
+            comparisonChart = new Chart(ctxComp, {
+                type: 'bar',
                 data: {
-                    labels: labelsSpeed,
-                    datasets: [{
-                        label: 'ความเร็วเดินเครื่องเฉลี่ยจริง (m/min)',
-                        data: valuesSpeed,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.04)',
-                        borderWidth: 3,
-                        tension: 0.3,
-                        fill: true,
-                        pointBackgroundColor: '#2563eb',
-                        pointHoverRadius: 6
-                    }]
+                    labels: [dateLabel === 'all' ? 'ภาพรวมทั้งหมด' : `วันที่ ${dateLabel}`],
+                    datasets: [
+                        {
+                            label: 'ความยาวตามแผนงาน (เมตร)',
+                            data: [planMeters],
+                            backgroundColor: '#94a3b8',
+                            borderRadius: 12
+                        },
+                        {
+                            label: 'ความยาวที่ผลิตได้จริง (เมตร)',
+                            data: [actMeters],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 12
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { family: 'Kanit', weight: 'bold' } }
+                        }
                     },
                     scales: {
                         y: {
@@ -763,15 +1067,14 @@
                             grid: { color: '#f1f5f9' }
                         },
                         x: {
-                            ticks: { font: { family: 'Kanit', size: 10 }, maxRotation: 45, minRotation: 45 },
-                            grid: { display: false }
+                            ticks: { font: { family: 'Kanit', weight: 'bold' } }
                         }
                     }
                 }
             });
         }
 
-        // ระบบส่งออกข้อมูลตาราง (Export Filtered Table to CSV)
+        // ระบบส่งออกข้อมูลรายงานผลิตจริงเป็น CSV
         function exportToCSV() {
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
             csvContent += "Wo. No.,กะ,วันที่ผลิต,เวลาเริ่ม/สิ้นสุด,ความเร็วเฉลี่ย,ระยะทางเมตร,น้ำหนัก,สถานะ Ontime\r\n";
@@ -779,22 +1082,24 @@
             const tableRows = document.querySelectorAll("#tableBody tr");
             tableRows.forEach(row => {
                 const cols = row.querySelectorAll("td");
-                const rowData = [];
-                rowData.push(`"${cols[0].innerText}"`);
-                rowData.push(`"${cols[1].innerText}"`);
-                rowData.push(`"${cols[2].innerText}"`);
-                rowData.push(`"${cols[3].innerText}"`);
-                rowData.push(`"${cols[7].innerText}"`);
-                rowData.push(`"${cols[8].innerText}"`);
-                rowData.push(`"${cols[9].innerText}"`);
-                rowData.push(`"${cols[12].innerText}"`);
-                csvContent += rowData.join(",") + "\r\n";
+                if (cols.length > 0) {
+                    const rowData = [];
+                    rowData.push(`"${cols[0].innerText}"`);
+                    rowData.push(`"${cols[1].innerText}"`);
+                    rowData.push(`"${cols[2].innerText}"`);
+                    rowData.push(`"${cols[3].innerText}"`);
+                    rowData.push(`"${cols[7].innerText}"`);
+                    rowData.push(`"${cols[8].innerText}"`);
+                    rowData.push(`"${cols[9].innerText}"`);
+                    rowData.push(`"${cols[12].innerText}"`);
+                    csvContent += rowData.join(",") + "\r\n";
+                }
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `YUELI_Production_Report_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute("download", `YUELI_Plan_vs_Actual_Report_${new Date().toISOString().split('T')[0]}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
