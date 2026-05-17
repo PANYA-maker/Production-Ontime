@@ -71,7 +71,7 @@
                 </div>
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2 text-slate-500 text-[11px] leading-relaxed">
                     <p class="font-black text-slate-700 flex items-center gap-1.5"><i data-lucide="help-circle" class="w-4 h-4 text-blue-500"></i> ลิงก์ปัจจุบันคือ:</p>
-                    <p class="font-mono bg-white p-2 rounded-lg border border-slate-100 break-all select-all">https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=1750235965&single=true&output=csv</p>
+                    <p class="font-mono bg-white p-2 rounded-lg border border-slate-100 break-all select-all text-[10px]">https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=1750235965&single=true&output=csv</p>
                 </div>
             </div>
 
@@ -151,7 +151,7 @@
         <!-- Complete Metrics Dashboard Visualizer -->
         <div id="dashboardContent" class="hidden space-y-6">
             
-            <!-- Summary KPI Grid Cards (Based on exact sheet fields) -->
+            <!-- Summary KPI Grid Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- KPI 1: Ontime Rate -->
                 <div class="bg-white p-6 rounded-[2rem] border border-slate-100 card-glow flex items-center gap-5">
@@ -181,7 +181,7 @@
                     </div>
                 </div>
                 <!-- KPI 4: Total Weight & Area -->
-                <div class="bg-slate-900 p-6 rounded-[2rem] card-glow flex items-center gap-5 text-white">
+                <div class="bg-slate-900 p-6 rounded-[2rem] card-glow flex items-center gap-5 text-white col-span-1">
                     <div class="bg-white/10 p-4 rounded-2xl text-blue-400"><i data-lucide="layers" class="w-8 h-8"></i></div>
                     <div>
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">น้ำหนักรวมทั้งหมด</p>
@@ -191,9 +191,59 @@
                 </div>
             </div>
 
+            <!-- NEW SECTION: รายงานสถิติติดตามงานค้างสะสม (Backlog / Delayed Work Summary) -->
+            <div class="bg-amber-50/50 border border-amber-200/60 p-6 rounded-[2.2rem] card-glow space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="p-2.5 bg-amber-100 text-amber-700 rounded-xl">
+                            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานสถิติติดตามงานค้าง (Backlog / งานช้ากว่าแผน)</h3>
+                            <p class="text-[11px] text-slate-400 font-medium">คำนวณสะสมตามวันกะจากออเดอร์ที่มีสถานะ "ช้ากว่าแผน"</p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 bg-amber-100 text-amber-800 text-[10px] font-black rounded-full uppercase">ยอดค้างสะสม</span>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- เมตรค้าง -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm text-left">
+                        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="milestone" class="w-5 h-5"></i></div>
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">ระยะทางค้าง</p>
+                            <h4 id="backlogMeters" class="text-base md:text-lg font-black text-slate-700">0 ม.</h4>
+                        </div>
+                    </div>
+                    <!-- ตารางเมตรค้าง -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm text-left">
+                        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="layout" class="w-5 h-5"></i></div>
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">พื้นที่ค้าง</p>
+                            <h4 id="backlogSqm" class="text-base md:text-lg font-black text-slate-700">0 ตร.ม.</h4>
+                        </div>
+                    </div>
+                    <!-- น้ำหนักค้าง -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm text-left">
+                        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="weight" class="w-5 h-5"></i></div>
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">น้ำหนักค้าง</p>
+                            <h4 id="backlogWeight" class="text-base md:text-lg font-black text-slate-700">0 กก.</h4>
+                        </div>
+                    </div>
+                    <!-- นาทีค้าง -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-4 shadow-sm text-left">
+                        <div class="p-3 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="clock" class="w-5 h-5"></i></div>
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">เวลาดำเนินการค้าง</p>
+                            <h4 id="backlogMinutes" class="text-base md:text-lg font-black text-rose-600">0 นาที</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Interruption & Stopping Analysis -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between">
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between text-left">
                     <div class="flex items-center gap-3">
                         <div class="p-3 bg-red-100 text-red-600 rounded-xl"><i data-lucide="octagon-pause" class="w-5 h-5"></i></div>
                         <div>
@@ -202,7 +252,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between">
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between text-left">
                     <div class="flex items-center gap-3">
                         <div class="p-3 bg-rose-100 text-rose-600 rounded-xl"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
                         <div>
@@ -211,7 +261,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between col-span-1 md:col-span-2 lg:col-span-1">
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 card-glow flex items-center justify-between col-span-1 md:col-span-2 lg:col-span-1 text-left">
                     <div class="flex items-center gap-3">
                         <div class="p-3 bg-purple-100 text-purple-600 rounded-xl"><i data-lucide="file-check-2" class="w-5 h-5"></i></div>
                         <div>
@@ -227,8 +277,8 @@
                 <!-- Chart 1: Ontime Doughnut -->
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow flex flex-col justify-between">
                     <div>
-                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i data-lucide="pie-chart" class="text-blue-500"></i> สัดส่วนความตรงต่อเวลา</h3>
-                        <p class="text-xs text-slate-400 font-medium">แบ่งกลุ่มใบสั่งผลิตตามประเภทสถานะความรวดเร็ว</p>
+                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="pie-chart" class="text-blue-500"></i> สัดส่วนความตรงต่อเวลา</h3>
+                        <p class="text-xs text-slate-400 font-medium text-left">แบ่งกลุ่มใบสั่งผลิตตามประเภทสถานะความรวดเร็ว</p>
                     </div>
                     <div class="h-60 flex justify-center items-center mt-4">
                         <canvas id="chartOntime"></canvas>
@@ -237,8 +287,8 @@
                 <!-- Chart 2: Speed Line Profile (Dynamic Trend) -->
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow lg:col-span-2 flex flex-col justify-between">
                     <div>
-                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i data-lucide="activity" class="text-blue-500"></i> แนวโน้มความเร็วตามใบสั่งผลิต (Speed Trend)</h3>
-                        <p class="text-xs text-slate-400 font-medium">ความเร็วเดินเครื่องเฉลี่ย (AVG_Speed) ของแต่ละ Wo. No. ตามลำดับเวลาการผลิตจริง</p>
+                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="activity" class="text-blue-500"></i> แนวโน้มความเร็วตามใบสั่งผลิต (Speed Trend)</h3>
+                        <p class="text-xs text-slate-400 font-medium text-left">ความเร็วเดินเครื่องเฉลี่ย (AVG_Speed) ของแต่ละ Wo. No. ตามลำดับเวลาการผลิตจริง</p>
                     </div>
                     <div class="h-60 mt-4">
                         <canvas id="chartSpeedProfile"></canvas>
@@ -249,7 +299,7 @@
             <!-- Detailed Raw Table Grid -->
             <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                    <div>
+                    <div class="text-left">
                         <h3 class="font-bold text-slate-800 flex items-center gap-2"><i data-lucide="table" class="text-blue-500"></i> บันทึกรายงานการผลิต YUELI รายบรรทัด</h3>
                         <p class="text-xs text-slate-400 font-medium">ข้อมูลประมวลผลดึงค่าสดจากฐานสเปรดชีตของคุณโดยตรง</p>
                     </div>
@@ -300,7 +350,7 @@
     </div>
 
     <script>
-        // ลิงก์ที่ระบุแถบตารางเฉพาะเจาะจงที่ผู้ใช้ให้มาเป็นค่าตั้งต้นเริ่มต้น
+        // ใช้ลิงก์ที่ระบุแถบตารางเฉพาะเจาะจงที่ผู้ใช้ให้มาเป็นค่าตั้งต้นเริ่มต้น
         const defaultCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=1750235965&single=true&output=csv";
         let rawRecords = [];
         let ontimeChart = null;
@@ -431,7 +481,7 @@
                 const csvText = await response.text();
                 
                 if (csvText.includes("<!DOCTYPE html>") || csvText.includes("<html")) {
-                    throw new Error("ดึงข้อมูลได้หน้าจอเว็บล็อกอินของ Google แทนที่จะเป็นไฟล์ CSV ดิบ กรุณาแชร์ไฟล์แบบ 'เผยแพร่ไปยังเว็บ (Publish to web)' และเลือกเป็นรูปแบบ 'ค่าที่คั่นด้วยจุลภาค (.csv)'");
+                    throw new Error("ดึงข้อมูลได้หน้าจอเว็บล็อกอินของ Google แทนที่จะเป็นข้อมูลดิบ กรุณาแชร์ไฟล์แบบ 'เผยแพร่ไปยังเว็บ (Publish to web)' และเลือกเป็นรูปแบบ 'ค่าที่คั่นด้วยจุลภาค (.csv)'");
                 }
 
                 rawRecords = parseCSV(csvText);
@@ -513,6 +563,12 @@
             let totalLossSec = 0;
             let totalStopsCount = 0;
 
+            // ค่านับสะสมสำหรับรายงาน "งานค้างช้ากว่าแผน"
+            let backlogMeters = 0;
+            let backlogSqm = 0;
+            let backlogWeight = 0;
+            let backlogProdSec = 0;
+
             const ontimeCounts = { "ทันแผน": 0, "ช้ากว่าแผน": 0, "นอกแผน": 0 };
             const speedProfileData = [];
 
@@ -526,7 +582,7 @@
                 const rawArea = getFlexVal(row, ["พื้นที่.ทั้งหมด(ตรม)", "พื้นที่ทั้งหมด", "พื้นที่"], "0");
                 const rawSpeed = getFlexVal(row, ["AVG_Speed(M/min)", "AVG_Speed", "สปีด"], "0");
                 
-                const rawProdSec = getFlexVal(row, ["เวลาผลิต(วินาที)", "เวลาผลิต"], "0");
+                const rawProdSec = getFlexVal(row, ["เวลาผลิต(วินาที)", "เวลาผลิต", "เวลาผลิตวินาที"], "0");
                 const rawLossSec = getFlexVal(row, ["เวลาที่หยุด"], "0");
                 const rawStops = getFlexVal(row, ["จำนวนครั้งที่หยุด"], "0");
 
@@ -557,6 +613,15 @@
                     ontimeCounts[ontimeStatus]++;
                 } else {
                     ontimeCounts["นอกแผน"]++;
+                }
+
+                // สแกนและสะสมค่าเฉพาะงานที่ "ช้ากว่าแผน"
+                if (ontimeStatus === "ช้ากว่าแผน") {
+                    backlogMeters += meters;
+                    backlogSqm += area;
+                    backlogWeight += weight;
+                    // ความเร็วที่ล่าช้า/เสียเวลารวมนาที (เวลาที่เครื่องทำงานจริงและเวลาหยุดพัก)
+                    backlogProdSec += (parseFloat(String(rawProdSec).replace(/,/g, '')) || 0) + (parseFloat(String(rawLossSec).replace(/,/g, '')) || 0);
                 }
 
                 const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"], "-");
@@ -622,6 +687,12 @@
             document.getElementById('kpiLossTime').innerText = `${totalLossMin.toLocaleString()} นาที`;
             document.getElementById('kpiStopCount').innerText = `${totalStopsCount.toLocaleString()} ครั้ง`;
             document.getElementById('rowCount').innerText = `แสดงผลทั้งหมด: ${records.length} รายการ`;
+
+            // อัปเดตข้อมูลรายงานงานค้าง (Backlog Indicators)
+            document.getElementById('backlogMeters').innerText = Math.round(backlogMeters).toLocaleString() + " ม.";
+            document.getElementById('backlogSqm').innerText = Math.round(backlogSqm).toLocaleString() + " ตร.ม.";
+            document.getElementById('backlogWeight').innerText = Math.round(backlogWeight).toLocaleString() + " กก.";
+            document.getElementById('backlogMinutes').innerText = Math.round(backlogProdSec / 60).toLocaleString() + " นาที";
 
             renderCharts(ontimeCounts, speedProfileData);
         }
