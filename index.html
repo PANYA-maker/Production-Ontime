@@ -11,7 +11,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Google Fonts (Kanit) -->
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght=300;400;500;700;900&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -188,7 +188,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planMeters">/ 0 <span class="text-xs font-normal">ม.</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ M - ยาวเมตร)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -215,7 +215,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planWeight">/ 0 <span class="text-xs font-normal">กก.</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ K - น้ำหนัก KG)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -242,7 +242,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planArea">/ 0 <span class="text-xs font-normal">ตร.ม.</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ J - พื้นที่ m2)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -265,11 +265,11 @@
                         <div class="flex justify-between items-baseline">
                             <div>
                                 <p class="text-3xl font-black text-slate-800" id="actualTime">0 <span class="text-xs font-normal">นาที</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง (เวลาผลิตวินาที / 60)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ผลิตจริง</p>
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planTime">/ 0 <span class="text-xs font-normal">นาที</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน (คอลัมน์ H - Time Min)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">ตามแผนงาน</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -296,7 +296,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="text-xl font-black text-slate-400" id="planSpeed">/ 0 <span class="text-xs font-normal">m/min</span></p>
-                                <p class="text-[10px] text-slate-400 font-bold">เป้าหมายแผน (คอลัมน์ M / H)</p>
+                                <p class="text-[10px] text-slate-400 font-bold">เป้าหมายแผน</p>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-50">
@@ -373,7 +373,7 @@
                 <!-- List Table of Missed Plan Jobs -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                     <div class="p-4 bg-slate-50 border-b border-slate-100 text-left">
-                        <h4 class="text-xs font-black text-slate-700">รายชื่อใบงานในแผนงาน (Plan) ที่ตกค้างในวันหยุดนี้</h4>
+                        <h4 class="text-xs font-black text-slate-700">รายชื่อใบงานในแผนงาน (Plan) ที่ตกค้างในวันที่เลือก</h4>
                     </div>
                     <div class="overflow-x-auto max-h-60 custom-scrollbar">
                         <table class="w-full text-left text-xs border-collapse">
@@ -412,7 +412,7 @@
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow lg:col-span-2 flex flex-col justify-between">
                     <div>
                         <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="activity" class="text-blue-500"></i> กราฟเปรียบเทียบความก้าวหน้าแผนเทียบรันจริง</h3>
-                        <p class="text-xs text-slate-400 font-medium text-left">เปรียบเทียบระยะทางเมตรแผน (ยาวเมตร) และระยะทางที่เครื่องจักรผลิตได้จริง</p>
+                        <p class="text-xs text-slate-400 font-medium text-left">เปรียบเทียบระยะทางเมตรแผน และระยะทางที่เครื่องจักรผลิตได้จริง</p>
                     </div>
                     <div class="h-60 mt-4">
                         <canvas id="chartPlanActualCompare"></canvas>
@@ -539,10 +539,12 @@
             }
         }
 
+        // ฟังก์ชันค้นหาและดึงค่าโดยทำความสะอาดคีย์เพื่อป้องกันสระเพี้ยน \n หรือตัวแบ่งวรรค
         function getFlexVal(row, possibleKeys, defaultVal = "") {
             if (!row) return defaultVal;
             for (let k of possibleKeys) {
                 if (!k) continue;
+                // ทำความสะอาดคีย์เปรียบเทียบ: ตัดเว้นวรรค วงเล็บ เครื่องหมายพิเศษ และขึ้นบรรทัดใหม่ (\n / \r)
                 const searchKey = String(k).replace(/[\s\(\)\.\/\n\r\\"]/g, '').trim().toLowerCase();
                 for (let actualKey in row) {
                     if (!actualKey) continue;
@@ -576,18 +578,25 @@
             if (dateStr.includes(' ')) {
                 dateStr = dateStr.split(' ')[0];
             }
+            let parts = [];
             if (dateStr.includes('/')) {
-                let parts = dateStr.split('/');
-                if (parts.length === 3) {
-                    let day = parseInt(parts[0], 10);
-                    let month = parseInt(parts[1], 10);
-                    let yearStr = parts[2].trim();
-                    let year = parseInt(yearStr, 10);
-                    if (yearStr.length === 2) {
-                        year = 2000 + year;
-                    }
-                    return `${day}/${month}/${year}`;
+                parts = dateStr.split('/');
+            } else if (dateStr.includes('-')) {
+                parts = dateStr.split('-');
+                if (parts[0].length === 4) { // Format: YYYY-MM-DD
+                    return `${parseInt(parts[2], 10)}/${parseInt(parts[1], 10)}/${parts[0]}`;
                 }
+            }
+
+            if (parts.length === 3) {
+                let day = parseInt(parts[0], 10);
+                let month = parseInt(parts[1], 10);
+                let yearStr = parts[2].trim();
+                let year = parseInt(yearStr, 10);
+                if (yearStr.length === 2) {
+                    year = 2000 + year;
+                }
+                return `${day}/${month}/${year}`;
             }
             return dateStr;
         }
@@ -595,6 +604,78 @@
         function normalizeOrderNo(orderStr) {
             if (!orderStr) return "";
             return String(orderStr).replace(/[\s\-_]/g, '').toLowerCase().trim();
+        }
+
+        // ตัวแยกและถอดข้อมูลชีตแผนงานการผลิต (Plan)
+        function parsePlanRecord(row) {
+            const poNo = getFlexVal(row, ["Prod  \nOrder No", "Prod \n Order No", "Prod Order No", "Prod  Order No", "Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"]).trim();
+            
+            let pMeters = parseFloat(String(getFlexVal(row, ["ยาวเมตร", "ยาวรวม \n(เมตร)", "ยาวรวม", "ความยาว", "ความยาวทั้งหมด", "ยาวรวมเมตร"])).replace(/,/g, '')) || 0;
+            
+            let pWeight = parseFloat(String(getFlexVal(row, ["น้ำหนัก (KG)", "น้ำหนัก", "Net \nWeight", "Net Weight", "นน"])).replace(/,/g, '')) || 0;
+            // ดักจับกรณีน้ำหนักลงหน่วยตันมาในชีตแผน (เช่น 1.15 ตัน แทน 1150 กิโลกรัม)
+            if (pWeight < 50 && pMeters > 50) {
+                pWeight = pWeight * 1000;
+            }
+
+            let pArea = parseFloat(String(getFlexVal(row, ["พื้นที่ (m2)", "พื้นที่", "พื้นที่.ทั้งหมด(ตรม)", "พื้นที่ทั้งหมด"])).replace(/,/g, '')) || 0;
+            // หากชีตแผนไม่มีคอลัมน์พื้นที่ แต่ระบุขนาดกว้างยาวมา ให้สกัดสูตรคำนวณพื้นที่ (ตรม) อัตโนมัติ
+            const widthVal = parseFloat(String(getFlexVal(row, ["กว้าง W", "หน้ากว้าง(มม)", "กว้าง"])).replace(/,/g, '')) || 0;
+            if (pArea === 0 && widthVal > 0 && pMeters > 0) {
+                pArea = (widthVal / 1000) * pMeters;
+            }
+
+            let pTime = parseTimeToMinutes(getFlexVal(row, ["Time \n (Min)", "Time (Min)", "Time", "CODE"]));
+            // หากชีตแผนไม่มีคอลัมน์เวลา แต่ระบุความเร็วมา ให้คำนวณเปรียบเทียบ: เวลา = เมตร / สปีด
+            const pSpeed = parseFloat(String(getFlexVal(row, ["Speed \n(M/Min)", "Speed (M/Min)", "Speed", "สปีด"])).replace(/,/g, '')) || 0;
+            if (pTime === 0 && pSpeed > 0 && pMeters > 0) {
+                pTime = pMeters / pSpeed;
+            }
+
+            const customer = getFlexVal(row, ["ชื่อลูกค้า", "ลูกค้า", "customer"], "-").trim();
+            const product = getFlexVal(row, ["ชื่อสินค้า", "สินค้า"], "-").trim();
+            const rawDate = getFlexVal(row, ["วันที่", "วันส่งมอบ", "date"]);
+            const date = normalizeDate(rawDate);
+
+            return { poNo, pMeters, pWeight, pArea, pTime, pSpeed, customer, product, date };
+        }
+
+        // ตัวแยกและถอดข้อมูลผลการผลิตจริงรายเครื่อง (Actual/Production)
+        function parseActualRecord(row) {
+            const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"], "-").trim();
+            
+            const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"], "0");
+            const rawWeight = getFlexVal(row, ["นน.ทั้งหมด(กก)", "นน.ทั้งหมด", "น้ำหนัก"], "0");
+            const rawArea = getFlexVal(row, ["พื้นที่.ทั้งหมด(ตรม)", "พื้นที่ทั้งหมด", "พื้นที่"], "0");
+            const rawSpeed = getFlexVal(row, ["AVG_Speed(M/min)", "AVG_Speed", "สปีด"], "0");
+            const rawProdSec = getFlexVal(row, ["เวลาผลิต(วินาที)", "เวลาผลิต"], "0");
+            const rawLossSec = getFlexVal(row, ["เวลาที่หยุด"], "0");
+            const rawStops = getFlexVal(row, ["จำนวนครั้งที่หยุด"], "0");
+
+            const meters = parseFloat(String(rawMeters).replace(/,/g, '')) || 0;
+            const weight = parseFloat(String(rawWeight).replace(/,/g, '')) || 0;
+            const area = parseFloat(String(rawArea).replace(/,/g, '')) || 0;
+            const speed = parseFloat(String(rawSpeed).replace(/,/g, '')) || 0;
+            const prodSec = parseFloat(String(rawProdSec).replace(/,/g, '')) || 0;
+
+            let ontimeStatus = getFlexVal(row, ["สถานะ Ontime", "สถานะ", "เช็คสถานะทันเวลา"], "นอกแผน").trim();
+            if (!ontimeStatus || ontimeStatus === "") ontimeStatus = "นอกแผน";
+
+            const rShift = getFlexVal(row, ["กะ", "shift"], "-").trim();
+            const rawDate = getFlexVal(row, ["วันที่", "date"]);
+            const rDate = normalizeDate(rawDate);
+            const rStart = getFlexVal(row, ["เวลาเริ่ม", "start_time"], "-").trim();
+            const rEnd = getFlexVal(row, ["เวลาสิ้นสุด", "end_time"], "-").trim();
+            const rJobType = getFlexVal(row, ["จำแนกประเภทงาน", "ประเภทงาน"], "-").trim();
+
+            const prodTimeMin = Math.round(prodSec / 60);
+            const lossTimeMin = Math.round((parseFloat(String(rawLossSec).replace(/,/g, '')) || 0) / 60);
+            const stopsCount = parseInt(String(rawStops).replace(/,/g, '')) || 0;
+
+            return {
+                rWo, meters, weight, area, speed, prodSec, prodTimeMin,
+                lossTimeMin, stopsCount, ontimeStatus, rShift, rDate, rStart, rEnd, rJobType
+            };
         }
 
         function parseCSV(text) {
@@ -692,14 +773,20 @@
 
         function populateFilterOptions(prodRecords, planRecords) {
             const dateSelect = document.getElementById('dateFilter');
+            const currentSelected = dateSelect.value;
             dateSelect.innerHTML = '<option value="all">ทุกวันที่ผลิต</option>';
             
-            const rawDates = [
-                ...prodRecords.map(r => getFlexVal(r, ["วันที่", "date"])),
-                ...planRecords.map(r => getFlexVal(r, ["วันที่", "date"]))
-            ];
+            const rawDates = [];
+            prodRecords.forEach(r => {
+                const parsed = parseActualRecord(r);
+                if (parsed.rDate) rawDates.push(parsed.rDate);
+            });
+            planRecords.forEach(r => {
+                const parsed = parsePlanRecord(r);
+                if (parsed.date) rawDates.push(parsed.date);
+            });
             
-            const normalizedUniqueDates = [...new Set(rawDates.map(normalizeDate).filter(Boolean))];
+            const normalizedUniqueDates = [...new Set(rawDates.filter(Boolean))];
             
             normalizedUniqueDates.sort((a,b) => {
                 const parseDate = s => {
@@ -716,7 +803,9 @@
                 dateSelect.appendChild(opt);
             });
 
-            if (normalizedUniqueDates.length > 0) {
+            if (currentSelected && normalizedUniqueDates.includes(currentSelected)) {
+                dateSelect.value = currentSelected;
+            } else if (normalizedUniqueDates.length > 0) {
                 dateSelect.value = normalizedUniqueDates[0];
             }
         }
@@ -726,17 +815,15 @@
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
 
             const filteredProd = rawProductionRecords.filter(row => {
-                const rDate = normalizeDate(getFlexVal(row, ["วันที่", "date"]));
-                const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"]).toLowerCase();
-                
-                const matchDate = (dateVal === "all" || rDate === dateVal);
-                const matchSearch = (searchVal === "" || rWo.includes(searchVal));
+                const parsed = parseActualRecord(row);
+                const matchDate = (dateVal === "all" || parsed.rDate === dateVal);
+                const matchSearch = (searchVal === "" || parsed.rWo.toLowerCase().includes(searchVal));
                 return matchDate && matchSearch;
             });
 
             const filteredPlan = rawPlanRecords.filter(row => {
-                const rDate = normalizeDate(getFlexVal(row, ["วันที่", "date"]));
-                const matchDate = (dateVal === "all" || rDate === dateVal);
+                const parsed = parsePlanRecord(row);
+                const matchDate = (dateVal === "all" || parsed.date === dateVal);
                 return matchDate;
             });
 
@@ -758,74 +845,52 @@
             tableBody.innerHTML = '';
 
             recordsProd.forEach(row => {
-                const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"], "0");
-                const rawWeight = getFlexVal(row, ["นน.ทั้งหมด(กก)", "นน.ทั้งหมด", "น้ำหนัก"], "0");
-                const rawArea = getFlexVal(row, ["พื้นที่.ทั้งหมด(ตรม)", "พื้นที่ทั้งหมด", "พื้นที่"], "0");
-                const rawSpeed = getFlexVal(row, ["AVG_Speed(M/min)", "AVG_Speed", "สปีด"], "0");
-                const rawProdSec = getFlexVal(row, ["เวลาผลิต(วินาที)", "เวลาผลิต"], "0");
-                const rawLossSec = getFlexVal(row, ["เวลาที่หยุด"], "0");
-                const rawStops = getFlexVal(row, ["จำนวนครั้งที่หยุด"], "0");
+                const pActual = parseActualRecord(row);
+                
+                actMeters += pActual.meters;
+                actWeight += pActual.weight;
+                actArea += pActual.area;
+                actTimeSec += pActual.prodSec;
 
-                const meters = parseFloat(String(rawMeters).replace(/,/g, '')) || 0;
-                const weight = parseFloat(String(rawWeight).replace(/,/g, '')) || 0;
-                const area = parseFloat(String(rawArea).replace(/,/g, '')) || 0;
-                const speed = parseFloat(String(rawSpeed).replace(/,/g, '')) || 0;
-                const prodSec = parseFloat(String(rawProdSec).replace(/,/g, '')) || 0;
-
-                actMeters += meters;
-                actWeight += weight;
-                actArea += area;
-                actTimeSec += prodSec;
-
-                if (speed > 0) {
-                    actSpeedSum += speed;
+                if (pActual.speed > 0) {
+                    actSpeedSum += pActual.speed;
                     actSpeedCount++;
                 }
 
-                let ontimeStatus = getFlexVal(row, ["สถานะ Ontime", "สถานะ"], "นอกแผน").trim();
-                if (!ontimeStatus) ontimeStatus = "นอกแผน";
-                if (ontimeCounts.hasOwnProperty(ontimeStatus)) {
-                    ontimeCounts[ontimeStatus]++;
+                if (ontimeCounts.hasOwnProperty(pActual.ontimeStatus)) {
+                    ontimeCounts[pActual.ontimeStatus]++;
                 } else {
                     ontimeCounts["นอกแผน"]++;
                 }
 
-                const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"], "-");
-                const rShift = getFlexVal(row, ["กะ", "shift"], "-");
-                const rDate = getFlexVal(row, ["วันที่", "date"], "-");
-                const rStart = getFlexVal(row, ["เวลาเริ่ม", "start_time"], "-");
-                const rEnd = getFlexVal(row, ["เวลาสิ้นสุด", "end_time"], "-");
-                const rJobType = getFlexVal(row, ["จำแนกประเภทงาน", "ประเภทงาน"], "-");
-
-                const prodTimeMin = Math.round(prodSec / 60);
-                const lossTimeMin = Math.round((parseFloat(String(rawLossSec).replace(/,/g, '')) || 0) / 60);
-                const stopsCount = parseInt(String(rawStops).replace(/,/g, '')) || 0;
+                const startShort = pActual.rStart.includes(" ") ? pActual.rStart.split(" ")[1] : pActual.rStart;
+                const endShort = pActual.rEnd.includes(" ") ? pActual.rEnd.split(" ")[1] : pActual.rEnd;
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-all";
                 tr.innerHTML = `
-                    <td class="p-4 font-bold text-slate-800">${rWo}</td>
-                    <td class="p-4 text-center font-bold text-slate-500">${rShift}</td>
-                    <td class="p-4 text-center text-slate-400 font-bold">${rDate}</td>
-                    <td class="p-4 text-center font-mono text-slate-500 text-[11px]">${rStart} - ${rEnd}</td>
-                    <td class="p-4 text-right font-black text-slate-700">${prodTimeMin} น.</td>
-                    <td class="p-4 text-right font-black text-slate-700">${lossTimeMin} น.</td>
-                    <td class="p-4 text-center font-black text-slate-700">${stopsCount} ครั้ง</td>
-                    <td class="p-4 text-right font-black text-slate-700">${speed.toLocaleString()}</td>
-                    <td class="p-4 text-right font-black text-slate-700">${meters.toLocaleString()}</td>
-                    <td class="p-4 text-right font-black text-slate-700">${weight.toLocaleString()}</td>
-                    <td class="p-4 text-right font-black text-slate-700">${area.toLocaleString()}</td>
+                    <td class="p-4 font-bold text-slate-800">${pActual.rWo}</td>
+                    <td class="p-4 text-center font-bold text-slate-500">${pActual.rShift}</td>
+                    <td class="p-4 text-center text-slate-400 font-bold">${pActual.rDate}</td>
+                    <td class="p-4 text-center font-mono text-slate-500 text-[11px]">${startShort} - ${endShort}</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.prodTimeMin} น.</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.lossTimeMin} น.</td>
+                    <td class="p-4 text-center font-black text-slate-700">${pActual.stopsCount} ครั้ง</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.speed.toLocaleString()}</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.meters.toLocaleString()}</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.weight.toLocaleString()}</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.area.toLocaleString()}</td>
                     <td class="p-4 text-center">
                         <span class="px-3 py-1 rounded-full text-[10px] font-black ${
-                            rJobType.includes("ตรงตามแผน") ? 'bg-blue-100 text-blue-700' :
-                            rJobType.includes("แทรก") ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700'
-                        }">${rJobType}</span>
+                            pActual.rJobType.includes("ตรงตามแผน") ? 'bg-blue-100 text-blue-700' :
+                            pActual.rJobType.includes("แทรก") ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700'
+                        }">${pActual.rJobType}</span>
                     </td>
                     <td class="p-4 text-center">
                         <span class="px-3 py-1.5 rounded-xl text-[10px] font-black ${
-                            ontimeStatus === "ทันแผน" ? 'bg-emerald-100 text-emerald-700' :
-                            ontimeStatus === "ช้ากว่าแผน" ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'
-                        }">${ontimeStatus}</span>
+                            pActual.ontimeStatus === "ทันแผน" ? 'bg-emerald-100 text-emerald-700' :
+                            pActual.ontimeStatus === "ช้ากว่าแผน" ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'
+                        }">${pActual.ontimeStatus}</span>
                     </td>
                 `;
                 tableBody.appendChild(tr);
@@ -839,26 +904,24 @@
             let planJobsCount = recordsPlan.length;
 
             recordsPlan.forEach(p => {
-                const pMeters = parseFloat(String(getFlexVal(p, ["ยาวเมตร", "ความยาว"])).replace(/,/g, '')) || 0;
-                const pWeight = parseFloat(String(getFlexVal(p, ["น้ำหนัก (KG)", "น้ำหนัก", "นน"])).replace(/,/g, '')) || 0;
-                const pArea = parseFloat(String(getFlexVal(p, ["พื้นที่ (m2)", "พื้นที่"])).replace(/,/g, '')) || 0;
-                const pTime = parseTimeToMinutes(getFlexVal(p, ["Time (Min)", "Time"]));
-
-                planMeters += pMeters;
-                planWeight += pWeight;
-                planArea += pArea;
-                planTimeMin += pTime;
+                const pPlan = parsePlanRecord(p);
+                planMeters += pPlan.pMeters;
+                planWeight += pPlan.pWeight;
+                planArea += pPlan.pArea;
+                planTimeMin += pPlan.pTime;
             });
 
-            // สูตรคำนวณสปีดแผนตามเงื่อนไข (ยาวเมตร M / Time Min H)
             const calculatedPlanSpeed = planTimeMin > 0 ? (planMeters / planTimeMin) : 0;
             const actualAvgSpeed = actSpeedCount > 0 ? (actSpeedSum / actSpeedCount) : 0;
             const actualAvgTimeMin = Math.round(actTimeSec / 60);
 
             // --- 3. การตรวจสอบใบงานค้างจากแผนที่ไม่ได้รันผลิต (Planned Backlog Tracking) ---
-            const producedOrdersSet = new Set(
-                recordsProd.map(r => normalizeOrderNo(getFlexVal(r, ["Wo. No.", "WoNo", "ออร์เดอร์"])))
-            );
+            const producedOrdersSet = new Set();
+            recordsProd.forEach(row => {
+                const pActual = parseActualRecord(row);
+                const cleanPo = normalizeOrderNo(pActual.rWo);
+                if (cleanPo) producedOrdersSet.add(cleanPo);
+            });
 
             let backlogCount = 0;
             let backlogMetersSum = 0;
@@ -870,34 +933,26 @@
             backlogTableBody.innerHTML = '';
 
             recordsPlan.forEach(p => {
-                const poNo = getFlexVal(p, ["Prod Order No", "Prod  Order No", "เลขที่ PO", "ออร์เดอร์", "Wo. No."]);
-                const cleanPo = normalizeOrderNo(poNo);
+                const pPlan = parsePlanRecord(p);
+                const cleanPo = normalizeOrderNo(pPlan.poNo);
 
                 if (cleanPo && !producedOrdersSet.has(cleanPo)) {
-                    const pMeters = parseFloat(String(getFlexVal(p, ["ยาวเมตร"])).replace(/,/g, '')) || 0;
-                    const pWeight = parseFloat(String(getFlexVal(p, ["น้ำหนัก (KG)"])).replace(/,/g, '')) || 0;
-                    const pArea = parseFloat(String(getFlexVal(p, ["พื้นที่ (m2)"])).replace(/,/g, '')) || 0;
-                    const pTime = parseTimeToMinutes(getFlexVal(p, ["Time (Min)", "Time"]));
-
                     backlogCount++;
-                    backlogMetersSum += pMeters;
-                    backlogWeightSum += pWeight;
-                    backlogAreaSum += pArea;
-                    backlogTimeSum += pTime;
-
-                    const customer = getFlexVal(p, ["ชื่อลูกค้า", "ลูกค้า", "customer"], "-");
-                    const product = getFlexVal(p, ["ชื่อสินค้า", "สินค้า"], "-");
+                    backlogMetersSum += pPlan.pMeters;
+                    backlogWeightSum += pPlan.pWeight;
+                    backlogAreaSum += pPlan.pArea;
+                    backlogTimeSum += pPlan.pTime;
 
                     const tr = document.createElement('tr');
                     tr.className = "hover:bg-amber-50/40 transition-all border-b border-slate-100";
                     tr.innerHTML = `
-                        <td class="p-3 font-bold text-slate-800">${poNo}</td>
-                        <td class="p-3 text-slate-500">${customer}</td>
-                        <td class="p-3 text-slate-400 max-w-xs truncate">${product}</td>
-                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pMeters).toLocaleString()}</td>
-                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pWeight).toLocaleString()}</td>
-                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pArea).toLocaleString()}</td>
-                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pTime)}</td>
+                        <td class="p-3 font-bold text-slate-800">${pPlan.poNo}</td>
+                        <td class="p-3 text-slate-500">${pPlan.customer}</td>
+                        <td class="p-3 text-slate-400 max-w-xs truncate">${pPlan.product}</td>
+                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pPlan.pMeters).toLocaleString()}</td>
+                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pPlan.pWeight).toLocaleString()}</td>
+                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pPlan.pArea).toLocaleString()}</td>
+                        <td class="p-3 text-right font-black text-slate-700">${Math.round(pPlan.pTime)}</td>
                     `;
                     backlogTableBody.appendChild(tr);
                 }
