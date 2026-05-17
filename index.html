@@ -274,7 +274,7 @@
         // ฟังก์ชันแปลงลิงก์อัตโนมัติให้ได้ CSV และระบุพารามิเตอร์ครบถ้วน
         function cleanSheetUrl(url) {
             if (!url) return defaultCsvUrl;
-            url = url.trim();
+            url = String(url).trim();
             
             // กรณีเป็นลิงก์แชร์ธรรมดา: /spreadsheets/d/[ID]/edit...
             const dMatch = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
@@ -321,14 +321,17 @@
             }
         }
 
-        // ค้นหาคีย์ที่มีความยืดหยุ่นสูง เพื่อป้องกันสระเพี้ยนหรือตัวพิมพ์เล็ก-ใหญ่ต่างกัน
+        // ค้นหาคีย์ที่มีความยืดหยุ่นสูง เพื่อป้องกันสระเพี้ยนหรือตัวพิมพ์เล็ก-ใหญ่ต่างกัน (รวมถึงการป้องกันข้อมูลที่เป็น undefined)
         function getFlexVal(row, possibleKeys, defaultVal = "") {
+            if (!row) return defaultVal;
             for (let k of possibleKeys) {
-                const searchKey = k.replace(/[\s\(\)\/]/g, '').trim().toLowerCase();
+                if (!k) continue;
+                const searchKey = String(k).replace(/[\s\(\)\/]/g, '').trim().toLowerCase();
                 for (let actualKey in row) {
-                    const compKey = actualKey.replace(/[\s\(\)\/]/g, '').trim().toLowerCase();
+                    if (!actualKey) continue;
+                    const compKey = String(actualKey).replace(/[\s\(\)\/]/g, '').trim().toLowerCase();
                     if (compKey === searchKey || compKey.includes(searchKey)) {
-                        return row[actualKey] !== undefined && row[actualKey] !== null ? row[actualKey] : defaultVal;
+                        return row[actualKey] !== undefined && row[actualKey] !== null ? String(row[actualKey]) : defaultVal;
                     }
                 }
             }
@@ -337,6 +340,7 @@
 
         // Custom Robust CSV Parser
         function parseCSV(text) {
+            if (!text) return [];
             const rows = [];
             let currentRow = [];
             let currentField = '';
@@ -364,13 +368,20 @@
             }
             if (currentField !== '' || currentRow.length > 0) {
                 currentRow.push(currentField.trim());
-                rows.push(currentRow);
+                if (currentRow.some(f => f !== '')) rows.push(currentRow);
             }
             if (rows.length === 0) return [];
-            const headers = rows[0].map(h => h.replace(/^"|"$/g, '').trim());
+            
+            const headers = rows[0].map(h => h ? String(h).replace(/^"|"$/g, '').trim() : '');
+            
             return rows.slice(1).map(row => {
                 const obj = {};
-                headers.forEach((header, index) => { obj[header] = row[index] ? row[index].replace(/^"|"$/g, '').trim() : ''; });
+                headers.forEach((header, index) => {
+                    if (header) {
+                        const val = row[index];
+                        obj[header] = (val !== undefined && val !== null) ? String(val).replace(/^"|"$/g, '').trim() : '';
+                    }
+                });
                 return obj;
             });
         }
@@ -474,16 +485,16 @@
             tableBody.innerHTML = '';
 
             records.forEach(row => {
-                // ดึงข้อมูลตัวเลขและตัดสัญลักษณ์พิเศษออก
+                // ดึงข้อมูลตัวเลขและตัดสัญลักษณ์พิเศษออก (ทุกอย่างจะถูกคลุมด้วย String() เพื่อความปลอดภัย)
                 const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "เมตร", "length"], "0");
                 const rawWeight = getFlexVal(row, ["นน.ทั้งหมด(กก)", "นน.ทั้งหมด", "น้ำหนักรวม", "weight"], "0");
                 const rawSpeed = getFlexVal(row, ["AVG_Speed(M/min)", "AVG_Speed", "สปีดจริง", "speed"], "0");
                 const rawProdTime = getFlexVal(row, ["เวลาผลิต(วินาที)", "เวลาผลิต", "เวลาผลิตวินาที"], "0");
 
-                const meters = parseFloat(rawMeters.replace(/,/g, '')) || 0;
-                const weight = parseFloat(rawWeight.replace(/,/g, '')) || 0;
-                const speed = parseFloat(rawSpeed.replace(/,/g, '')) || 0;
-                const prodTimeMin = Math.round((parseFloat(rawProdTime.replace(/,/g, '')) || 0) / 60);
+                const meters = parseFloat(String(rawMeters).replace(/,/g, '')) || 0;
+                const weight = parseFloat(String(rawWeight).replace(/,/g, '')) || 0;
+                const speed = parseFloat(String(rawSpeed).replace(/,/g, '')) || 0;
+                const prodTimeMin = Math.round((parseFloat(String(rawProdTime).replace(/,/g, '')) || 0) / 60);
 
                 totalMeters += meters;
                 totalWeight += weight;
