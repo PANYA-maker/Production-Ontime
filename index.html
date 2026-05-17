@@ -379,7 +379,7 @@
                         </div>
                         <div class="text-left">
                             <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานวิเคราะห์งานแผนที่ "ค้างผลิต" (Planned Jobs NOT Produced on Date Range)</h3>
-                            <p class="text-[11px] text-slate-500 font-medium">คำนวณจากใบออเดอร์ในแผนของวันที่เลือก แต่ยังไม่มีข้อมูลบันทึกการผลิตจริงเกิดขึ้นในเครื่องจักรเลย</p>
+                            <p class="text-[11px] text-slate-500 font-medium">คำนวณจากใบออเดอร์ในแผนของวันที่เลือก แต่ยังไม่มีการรันจริงบันทึกเข้ามาในระบบ ณ วันที่เลือกนั้น ๆ (วันต่อวัน)</p>
                         </div>
                     </div>
                     <span id="backlogSummaryCount" class="px-3 py-1.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded-xl">ยอดค้างผลิต: 0 งาน</span>
@@ -469,7 +469,7 @@
                 <!-- Chart 2: Plan vs Actual Volume Chart -->
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow lg:col-span-2 flex flex-col justify-between">
                     <div>
-                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="activity" class="text-blue-500"></i> กราฟเปรียบเทียบความก้าวหน้าแผนเทียบรันจริง (PDR)</h3>
+                        <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="activity" class="text-blue-500"></i> กราฟเปรียบเทียบความก้าวหน้าแผนเทียบรันจริง</h3>
                         <p class="text-xs text-slate-400 font-medium text-left">เปรียบเทียบระยะทางเมตรแผน และระยะทางที่เครื่องจักรผลิตได้จริง</p>
                     </div>
                     <div class="h-60 mt-4">
@@ -538,9 +538,7 @@
         let rawProductionRecords = [];
         let rawPlanRecords = [];
         
-        // ตัวแปรเก็บการแมตช์ความสัมพันธ์ระดับ Global (เพื่อแก้ไขเงื่อนไขสเปรดชีตข้ามวัน)
         let allPlanOrders = new Set();
-        let allProducedOrders = new Set();
         
         let ontimeChart = null;
         let comparisonChart = null;
@@ -906,12 +904,9 @@
                 rawPlanRecords = parseCSV(planCsv);
 
                 if (rawProductionRecords.length > 0 && rawPlanRecords.length > 0) {
-                    // สร้างความสัมพันธ์แมตช์ชุดข้อมูลระดับ Global เพื่อเทียบเงื่อนไขค้างผลิตข้ามวัน
+                    // ดึงแผนงานทั้งหมดมาเก็บไว้ในเซตระดับ Global เพื่อใช้จัดหมวดหมู่งาน
                     allPlanOrders = new Set(
                         rawPlanRecords.map(row => normalizeOrderNo(parsePlanRecord(row).poNo)).filter(Boolean)
-                    );
-                    allProducedOrders = new Set(
-                        rawProductionRecords.map(row => normalizeOrderNo(parseActualRecord(row).woNo)).filter(Boolean)
                     );
 
                     initDateRangeFilters(rawProductionRecords, rawPlanRecords);
@@ -1091,7 +1086,7 @@
                 const startShort = pActual.rStart.includes(" ") ? pActual.rStart.split(" ")[1] : pActual.rStart;
                 const endShort = pActual.rEnd.includes(" ") ? pActual.rEnd.split(" ")[1] : pActual.rEnd;
                 const pTimeMin = Math.round(pActual.timeSec / 60);
-                const rStopTimeMin = Math.round(pActual.timeSec / 3600); // จำลองชั่วโมงการหยุดทำงาน
+                const rStopTimeMin = Math.round(pActual.timeSec / 3600); // ชั่วโมงการหยุดทำงานโดยประมาณ
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-all border-b border-slate-100";
@@ -1208,7 +1203,7 @@
             document.getElementById('diffSpeed').innerText = `ส่วนต่างสปีด: ${diffS >= 0 ? '+' : ''}${diffS.toFixed(1)} m/min`;
             document.getElementById('diffSpeed').className = `text-[11px] font-bold ${diffS >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
 
-            // --- 6. อัปเดตข้อมูลบน แผงสรุปงานประเภทอื่นๆ (Non-PDR Summary) ครบทั้ง 5 ด้านตามสั่ง ---
+            // --- 6. อัปเดตข้อมูลบน แผงสรุปงานประเภทอื่นๆ (Non-PDR Summary) ---
             document.getElementById('nonPdrBadge').innerText = `ไม่ใช่แผน: ${actNonPdrJobsCount} ออเดอร์`;
             document.getElementById('nonPdrMeters').innerHTML = `${Math.round(actNonPdrMeters).toLocaleString()} <span class="text-xs font-normal">ม.</span>`;
             document.getElementById('nonPdrWeight').innerHTML = `${Math.round(actNonPdrWeight).toLocaleString()} <span class="text-xs font-normal">กก.</span>`;
@@ -1216,7 +1211,12 @@
             document.getElementById('nonPdrTime').innerHTML = `${Math.round(nonPdrTimeMin).toLocaleString()} <span class="text-xs font-normal">นาที</span>`;
             document.getElementById('nonPdrSpeed').innerHTML = `${nonPdrSpeed.toFixed(1)} <span class="text-xs font-normal">m/min</span>`;
 
-            // --- 7. คำนวณยอดค้างผลิต (Backlog) แบบมีความเที่ยงตรง (เทียบกับข้อมูลประวัติผลิตทั้งหมด) ---
+            // --- 7. คำนวณยอดค้างผลิต (Backlog) แบบ "วันต่อวัน" (Day-by-Day) 🎯 ---
+            // สร้าง Set ของออเดอร์ที่ถูกสับรันผลิตจริง "ภายในช่วงเวลาที่เลือกเท่านั้น" (recordsProd)
+            const producedOrdersInDateRange = new Set(
+                recordsProd.map(row => normalizeOrderNo(parseActualRecord(row).woNo)).filter(Boolean)
+            );
+
             let backlogCount = 0;
             let backlogMetersSum = 0;
             let backlogWeightSum = 0;
@@ -1226,13 +1226,13 @@
             const backlogTableBody = document.getElementById('backlogTableBody');
             backlogTableBody.innerHTML = '';
 
-            // ดึงแผนการผลิตของวันที่เลือก
+            // ตรวจจับออเดอร์ตามแผนงาน "ในวันที่เลือก"
             recordsPlan.forEach(p => {
                 const pPlan = parsePlanRecord(p);
                 const cleanPo = normalizeOrderNo(pPlan.poNo);
 
-                // เงื่อนไขค้างผลิตใหม่: ถ้าข้อมูลใบออเดอร์ในคอลัมน์ C ของชีตแผน (poNo) ไม่มีอยู่เลยในชีตประวัติรันจริง คอลัมน์ F (allProducedOrders)
-                if (cleanPo && !allProducedOrders.has(cleanPo)) {
+                // หากแผนงานของวันที่เลือก ไม่มีประวัติรันผลิตจริงเกิดขึ้น "ในวันที่เลือกเดียวกันนั้น"
+                if (cleanPo && !producedOrdersInDateRange.has(cleanPo)) {
                     backlogCount++;
                     backlogMetersSum += pPlan.pMeters;
                     backlogWeightSum += pPlan.pWeight;
@@ -1255,12 +1255,12 @@
             });
 
             if (backlogCount === 0) {
-                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! ไม่พบงานในแผนตกค้างที่ไม่ได้สับรันผลิตในช่วงเวลานี้</td></tr>`;
+                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! ไม่พบแผนการผลิตตกค้างที่ยังไม่รันจริงในวันที่เลือกนี้</td></tr>`;
             }
 
             const backlogAvgSpeed = backlogTimeSum > 0 ? (backlogMetersSum / backlogTimeSum) : 0;
             
-            // อัปเดตข้อมูลการ์ดวิเคราะห์งานค้างผลิต ครบทั้ง 5 ด้านตามสั่ง
+            // อัปเดตข้อมูลบนหน้าจอรวดเดียวจบครบถ้วน 5 ด้าน
             document.getElementById('backlogSummaryCount').innerText = `ยอดค้างผลิต: ${backlogCount} งาน`;
             document.getElementById('backlogMeters').innerText = Math.round(backlogMetersSum).toLocaleString() + " ม.";
             document.getElementById('backlogWeight').innerText = Math.round(backlogWeightSum).toLocaleString() + " กก.";
