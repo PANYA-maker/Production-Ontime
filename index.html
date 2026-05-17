@@ -95,7 +95,7 @@
                     <h1 class="text-2xl md:text-3xl font-black tracking-tight text-slate-800">YUELI PLAN vs ACTUAL</h1>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
                         <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full inline-block animate-ping"></span>
-                        ระบบเปรียบเทียบแผนและผลลัพธ์ผลิตจริงรายวัน
+                        ระบบเปรียบเทียบแผนและผลลัพธ์ผลิตจริงตามช่วงเวลา
                     </p>
                 </div>
             </div>
@@ -105,12 +105,21 @@
                 <button onclick="toggleSettingsModal(true)" class="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3.5 rounded-2xl font-bold text-xs transition-all w-full sm:w-auto">
                     <i data-lucide="settings" class="w-4 h-4"></i> ตั้งค่าแหล่งข้อมูล
                 </button>
-                <div class="flex items-center gap-2 bg-slate-100 px-4 py-3 rounded-2xl w-full sm:w-auto">
-                    <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
-                    <select id="dateFilter" onchange="filterData()" class="bg-transparent font-bold text-slate-700 outline-none border-none text-xs cursor-pointer w-full">
-                        <option value="all">ทุกวันที่ผลิต</option>
-                    </select>
+                
+                <!-- NEW: Styled Date Range Selector -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 bg-slate-100 p-2 rounded-2xl w-full sm:w-auto">
+                    <div class="flex items-center gap-1.5 px-2 w-full sm:w-auto">
+                        <i data-lucide="calendar" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">เริ่ม</span>
+                        <input type="date" id="dateStartFilter" onchange="filterData()" class="bg-transparent font-bold text-slate-700 outline-none border-none text-xs cursor-pointer w-full focus:ring-0">
+                    </div>
+                    <div class="hidden sm:block text-slate-300">|</div>
+                    <div class="flex items-center gap-1.5 px-2 w-full sm:w-auto border-t border-slate-200 sm:border-t-0 pt-1.5 sm:pt-0">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">ถึง</span>
+                        <input type="date" id="dateEndFilter" onchange="filterData()" class="bg-transparent font-bold text-slate-700 outline-none border-none text-xs cursor-pointer w-full focus:ring-0">
+                    </div>
                 </div>
+
                 <button onclick="fetchData()" class="flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 rounded-2xl font-bold text-xs active:scale-95 transition-all w-full sm:w-auto">
                     <i data-lucide="refresh-cw" class="w-4 h-4 animate-spin-hover"></i> รีโหลดสด
                 </button>
@@ -312,7 +321,7 @@
                 </div>
             </div>
 
-            <!-- ⭐️ NEW SECTION: แผงวิเคราะห์งานประเภทอื่นๆ (ไม่ใช่ PDR) -->
+            <!-- SECTION: แผงวิเคราะห์งานประเภทอื่นๆ (ไม่ใช่ PDR) -->
             <div class="bg-slate-900 text-white p-6 md:p-8 rounded-[2.2rem] card-glow space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div class="flex items-center gap-3 text-left">
@@ -375,8 +384,8 @@
                             <i data-lucide="alert-triangle" class="w-5 h-5"></i>
                         </div>
                         <div class="text-left">
-                            <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานวิเคราะห์งานแผนที่ "ค้างผลิต" (Planned Jobs NOT Produced on Date)</h3>
-                            <p class="text-[11px] text-slate-500 font-medium">คำนวณจากใบออเดอร์ในแผนการผลิตของวันที่เลือก แต่ยังไม่ถูกส่งไปรันการผลิตจริงในเครื่องจักร</p>
+                            <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานวิเคราะห์งานแผนที่ "ค้างผลิต" (Planned Jobs NOT Produced on Date Range)</h3>
+                            <p class="text-[11px] text-slate-500 font-medium">คำนวณจากใบออเดอร์ในแผนการผลิตของช่วงเวลาที่เลือก แต่ยังไม่ถูกส่งไปรันการผลิตจริงในเครื่องจักร</p>
                         </div>
                     </div>
                     <span id="backlogSummaryCount" class="px-3 py-1.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded-xl">ยอดค้างผลิต: 0 งาน</span>
@@ -457,7 +466,7 @@
                 <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 card-glow flex flex-col justify-between">
                     <div>
                         <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2 text-left"><i data-lucide="pie-chart" class="text-blue-500"></i> สัดส่วนความตรงต่อเวลา (กะทำงานจริง)</h3>
-                        <p class="text-xs text-slate-400 font-medium text-left">สรุปสถานะการผลิตของกะงานจริงในวันที่เลือก</p>
+                        <p class="text-xs text-slate-400 font-medium text-left">สรุปสถานะการผลิตของกะงานจริงในช่วงเวลาที่เลือก</p>
                     </div>
                     <div class="h-60 flex justify-center items-center mt-4">
                         <canvas id="chartOntime"></canvas>
@@ -701,14 +710,14 @@
                 }
             }
 
-            // ลำดับที่ 3: ตรวจจับแบบ Substring (Substring Match) โดยต้องมีความยาวมากกว่า 3 ตัวอักษรเพื่อป้องกันการชนกัน
+            // ลำดับที่ 3: ตรวจจับแบบ Substring Match โดยเพิ่มความปลอดภัยไม่ให้ดึงคอลัมน์อื่นที่ชื่อยาวกว่าแต่ใกล้เคียงกันปนมา
             for (let cp of cleanedPossible) {
                 if (cp.length < 3) continue;
                 for (let actualKey in row) {
                     const cleanedActual = cleanKey(actualKey);
                     
                     // ป้องกันความเสี่ยงกรณีชนกัน (Conflict Guards):
-                    // ห้ามไม่ให้คีย์หลักอย่าง "วันที่" ไปจับสับสนกับ "ดึงวันที่ตามแผน"
+                    // ห้ามไม่ให้คีย์หลักอย่าง "วันที่" ไปจับสับสนกับ "ดึงวันที่ตามแผน" หรือ "วันที่ส่งสินค้า"
                     if (cp === "วันที่" && cleanedActual !== "วันที่") {
                         continue;
                     }
@@ -781,8 +790,19 @@
             return String(orderStr).replace(/[\s\-_]/g, '').toLowerCase().trim();
         }
 
+        // ฟังก์ชันช่วยสำหรับการแปลงวันที่ฟอร์แมต DD/MM/YYYY เป็นออบเจ็กต์ Date ของ JS สำหรับใช้เปรียบเทียบช่วงเวลา
+        function parseDateString(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
+            }
+            return null;
+        }
+
         // ⭐️ ถอดและประกอบข้อมูลแผน (Plan) ตามข้อกำหนดคอลัมน์ของคุณเป๊ะๆ:
         // - คอลัมน์ C: Prod Order No (รหัสสั่งผลิต)
+        // - คอลัมน์ N: วันที่ (วันที่วางแผน)
         // - คอลัมน์ M: ยาวเมตร
         // - คอลัมน์ K: น้ำหนัก (KG)
         // - คอลัมน์ J: พื้นที่ (m2)
@@ -802,6 +822,7 @@
             const customer = getFlexVal(row, ["ชื่อลูกค้า", "ลูกค้า", "customer"], "-").trim();
             const product = getFlexVal(row, ["ชื่อสินค้า", "สินค้า"], "-").trim();
             
+            // อ่านค่าวันที่ตรงจุดจาก คอลัมน์ N
             const rawDate = getFlexVal(row, ["วันที่", "วันส่งมอบ", "date"]);
             const date = normalizeDate(rawDate);
 
@@ -810,6 +831,7 @@
 
         // ⭐️ ถอดและประกอบข้อมูลผลิตจริง (Production) ตามข้อกำหนดคอลัมน์ของคุณเป๊ะๆ:
         // - คอลัมน์ A: PD (หรือใบงาน)
+        // - คอลัมน์ R: วันที่ (วันที่ผลิตจริง)
         // - คอลัมน์ P: ความยาวทั้งหมด(เมตร)
         // - คอลัมน์ N: นน.ทั้งหมด(กก)
         // - คอลัมน์ O: พื้นที่.ทั้งหมด(ตรม)
@@ -834,6 +856,7 @@
             let ontimeStatus = getFlexVal(row, ["สถานะ Ontime", "สถานะ", "เช็คสถานะทันเวลา"], "นอกแผน").trim();
             if (!ontimeStatus || ontimeStatus === "") ontimeStatus = "นอกแผน";
 
+            // อ่านค่าวันที่ตรงจุดจากคอลัมน์ R (วันที่) ของชีตผลิตจริง
             let rawDate = getFlexVal(row, ["วันที่", "date"]);
             if (!rawDate) {
                 const startTimeVal = getFlexVal(row, ["เวลาเริ่ม", "start_time"]);
@@ -950,7 +973,7 @@
                     document.getElementById('diagProdOrderKey').innerText = getFlexKey(rawProductionRecords[0], ["PD", "ใบงาน"]) || "ไม่พบ!";
                     document.getElementById('diagProdMetersKey').innerText = getFlexKey(rawProductionRecords[0], ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด"]) || "ไม่พบ!";
 
-                    populateFilterOptions(rawProductionRecords, rawPlanRecords);
+                    initDateRangeFilters(rawProductionRecords, rawPlanRecords);
                     filterData();
                     showToast("ดึงและเชื่อมต่อข้อมูลเปรียบเทียบเสร็จสิ้น!", "success");
                     document.getElementById('dashboardContent').classList.remove('hidden');
@@ -969,11 +992,8 @@
             }
         }
 
-        function populateFilterOptions(prodRecords, planRecords) {
-            const dateSelect = document.getElementById('dateFilter');
-            const currentSelected = dateSelect.value;
-            dateSelect.innerHTML = '<option value="all">ทุกวันที่ผลิต / ดูสะสมทั้งหมด</option>';
-            
+        // ค้นหาขอบเขตระยะเวลาผลิตจริง และ แผนการผลิต เพื่อนำมากำหนดค่าเริ่มต้นของปฏิทิน
+        function initDateRangeFilters(prodRecords, planRecords) {
             const rawDates = [];
             prodRecords.forEach(r => {
                 const parsed = parseActualRecord(r);
@@ -985,54 +1005,107 @@
             });
             
             const normalizedUniqueDates = [...new Set(rawDates.filter(Boolean))];
+            const dateObjects = normalizedUniqueDates.map(d => parseDateString(d)).filter(Boolean);
             
-            normalizedUniqueDates.sort((a,b) => {
-                const parseDate = s => {
-                    const parts = s.split('/');
-                    return new Date(parts[2], parts[1]-1, parts[0]);
-                };
-                return parseDate(b) - parseDate(a);
-            });
-
-            normalizedUniqueDates.forEach(date => {
-                const opt = document.createElement('option');
-                opt.value = date;
-                opt.innerText = "วันผลิตที่ " + date;
-                dateSelect.appendChild(opt);
-            });
-
-            if (currentSelected && normalizedUniqueDates.includes(currentSelected)) {
-                dateSelect.value = currentSelected;
-            } else if (normalizedUniqueDates.length > 0) {
-                dateSelect.value = normalizedUniqueDates[0];
+            if (dateObjects.length === 0) return;
+            
+            // เรียงลำดับจากเก่าสุดไปหาใหม่สุด
+            dateObjects.sort((a, b) => a - b);
+            
+            const minDate = dateObjects[0];
+            const maxDate = dateObjects[dateObjects.length - 1];
+            
+            const toISOString = (d) => {
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${y}-${m}-${day}`;
+            };
+            
+            const minISO = toISOString(minDate);
+            const maxISO = toISOString(maxDate);
+            
+            const startInput = document.getElementById('dateStartFilter');
+            const endInput = document.getElementById('dateEndFilter');
+            
+            // ตั้งค่าดีฟอลต์ (กำหนดให้ครอบคลุมภาพรวมทั้งหมดเป็นค่าตั้งต้น)
+            if (!startInput.value) {
+                startInput.value = minISO;
             }
+            if (!endInput.value) {
+                endInput.value = maxISO;
+            }
+            
+            // จำกัดขอบเขตของตัวเลือก
+            startInput.min = minISO;
+            startInput.max = maxISO;
+            endInput.min = minISO;
+            endInput.max = maxISO;
         }
 
         function filterData() {
-            const dateVal = document.getElementById('dateFilter').value;
+            const startVal = document.getElementById('dateStartFilter').value;
+            const endVal = document.getElementById('dateEndFilter').value;
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
 
-            // คัดกรองข้อมูลดิบสำหรับวันทีเลือก
+            const startDate = startVal ? new Date(startVal) : null;
+            const endDate = endVal ? new Date(endVal) : null;
+            
+            if (startDate) startDate.setHours(0,0,0,0);
+            if (endDate) endDate.setHours(23,59,59,999);
+
+            // คัดกรองข้อมูลผลิตจริงตามช่วงเวลา
             const filteredProd = rawProductionRecords.filter(row => {
                 const parsed = parseActualRecord(row);
                 if (!parsed.pd || parsed.pd === "-" || parsed.pd === "") return false;
-                const matchDate = (dateVal === "all" || parsed.rDate === dateVal);
+                
+                let matchDate = true;
+                if (startDate || endDate) {
+                    const itemDate = parseDateString(parsed.rDate);
+                    if (itemDate) {
+                        if (startDate && itemDate < startDate) matchDate = false;
+                        if (endDate && itemDate > endDate) matchDate = false;
+                    } else {
+                        matchDate = false;
+                    }
+                }
+                
                 const matchSearch = (searchVal === "" || parsed.pd.toLowerCase().includes(searchVal));
                 return matchDate && matchSearch;
             });
 
+            // คัดกรองข้อมูลตามแผนตามช่วงเวลา
             const filteredPlan = rawPlanRecords.filter(row => {
                 const parsed = parsePlanRecord(row);
                 if (!parsed.poNo || parsed.poNo === "-" || parsed.poNo === "" || parsed.pMeters === 0) return false;
-                const matchDate = (dateVal === "all" || parsed.date === dateVal);
+                
+                let matchDate = true;
+                if (startDate || endDate) {
+                    const itemDate = parseDateString(parsed.date);
+                    if (itemDate) {
+                        if (startDate && itemDate < startDate) matchDate = false;
+                        if (endDate && itemDate > endDate) matchDate = false;
+                    } else {
+                        matchDate = false;
+                    }
+                }
                 return matchDate;
             });
 
-            renderDashboard(filteredProd, filteredPlan, dateVal);
+            const dateLabel = (startVal && endVal) ? `${formatFriendlyDate(startDate)} - ${formatFriendlyDate(endDate)}` : "ช่วงเวลาที่เลือก";
+            renderDashboard(filteredProd, filteredPlan, dateLabel);
             lucide.createIcons();
         }
 
-        function renderDashboard(recordsProd, recordsPlan, selectedDate) {
+        function formatFriendlyDate(dateObj) {
+            if (!dateObj) return "";
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const y = dateObj.getFullYear() + 543; // แปลงพ.ศ. ให้คนไทยคุ้นเคย
+            return `${d}/${m}/${y}`;
+        }
+
+        function renderDashboard(recordsProd, recordsPlan, dateRangeLabel) {
             // --- 1. สรุปผลผลิตของงานประเภท PDR ---
             let actPdrJobsCount = 0;
             let actPdrMeters = 0;
@@ -1249,7 +1322,7 @@
             });
 
             if (backlogCount === 0) {
-                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! ไม่พบงานในแผนตกค้างที่ไม่ได้สับรันผลิตในวันนี้</td></tr>`;
+                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! ไม่พบงานในแผนตกค้างที่ไม่ได้สับรันผลิตในช่วงเวลานี้</td></tr>`;
             }
 
             const backlogAvgSpeed = backlogTimeSum > 0 ? (backlogMetersSum / backlogTimeSum) : 0;
@@ -1262,7 +1335,7 @@
 
             document.getElementById('rowCount').innerText = `แสดงผลข้อมูลผลิตจริง: ${recordsProd.length} รายการ`;
 
-            renderCharts(ontimeCounts, actPdrMeters, planMeters, selectedDate);
+            renderCharts(ontimeCounts, actPdrMeters, planMeters, dateRangeLabel);
         }
 
         function renderCharts(ontimeData, actMeters, planMeters, dateLabel) {
@@ -1297,7 +1370,7 @@
             comparisonChart = new Chart(ctxComp, {
                 type: 'bar',
                 data: {
-                    labels: [dateLabel === 'all' ? 'สะสมภาพรวมทั้งหมด' : `แผนงานวันที่ ${dateLabel}`],
+                    labels: [dateLabel],
                     datasets: [
                         {
                             label: 'ความยาวตามแผนงาน (เมตร)',
