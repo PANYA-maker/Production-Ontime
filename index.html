@@ -199,8 +199,8 @@
                             <i data-lucide="alert-circle" class="w-5 h-5"></i>
                         </div>
                         <div class="text-left">
-                            <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานสถิติติดตามงานค้าง (Backlog / งานช้ากว่าแผน)</h3>
-                            <p class="text-[11px] text-slate-400 font-medium">คำนวณสะสมตามวันกะจากออเดอร์ที่มีสถานะ "ช้ากว่าแผน"</p>
+                            <h3 class="font-black text-slate-800 text-sm md:text-base">รายงานสถิติติดตามงานค้าง (Backlog / งานตกค้างจากวันก่อน)</h3>
+                            <p class="text-[11px] text-slate-400 font-medium">คำนวณสะสมตามวันกะจากออเดอร์ที่มีประเภทงาน "งานตกค้าง/ผลิตไม่ทันจากวันก่อน"</p>
                         </div>
                     </div>
                     <span class="px-3 py-1 bg-amber-100 text-amber-800 text-[10px] font-black rounded-full uppercase">ยอดค้างสะสม</span>
@@ -563,7 +563,7 @@
             let totalLossSec = 0;
             let totalStopsCount = 0;
 
-            // ค่านับสะสมสำหรับรายงาน "งานค้างช้ากว่าแผน"
+            // ค่านับสะสมสำหรับรายงาน "งานค้างตกค้าง"
             let backlogMeters = 0;
             let backlogSqm = 0;
             let backlogWeight = 0;
@@ -615,8 +615,11 @@
                     ontimeCounts["นอกแผน"]++;
                 }
 
-                // สแกนและสะสมค่าเฉพาะงานที่ "ช้ากว่าแผน"
-                if (ontimeStatus === "ช้ากว่าแผน") {
+                let jobType = getFlexVal(row, ["จำแนกประเภทงาน", "ประเภทงาน"], "งานแทรกด่วนนอกแผน").trim();
+                if (!jobType || jobType === "") jobType = "งานแทรกด่วนนอกแผน";
+
+                // ปรับปรุงเงื่อนไขงานค้าง: คัดกรองจากประเภทงาน "งานตกค้าง/ผลิตไม่ทันจากวันก่อน" ตามที่ระบุ
+                if (jobType === "งานตกค้าง/ผลิตไม่ทันจากวันก่อน") {
                     backlogMeters += meters;
                     backlogSqm += area;
                     backlogWeight += weight;
@@ -629,7 +632,6 @@
                 const rDate = getFlexVal(row, ["วันที่", "date"], "-");
                 const rStart = getFlexVal(row, ["เวลาเริ่ม", "start_time"], "-");
                 const rEnd = getFlexVal(row, ["เวลาสิ้นสุด", "end_time"], "-");
-                const rJobType = getFlexVal(row, ["จำแนกประเภทงาน", "ประเภทงาน"], "-");
 
                 // บันทึกโปรไฟล์ความเร็วเพื่อทำกราฟ Trend ตามใบงาน
                 if (rWo !== "-") {
@@ -656,9 +658,10 @@
                     <td class="p-4 text-right font-black text-slate-700">${area.toLocaleString()}</td>
                     <td class="p-4 text-center">
                         <span class="px-3 py-1 rounded-full text-[10px] font-black ${
-                            rJobType.includes("ตรงตามแผน") ? 'bg-blue-100 text-blue-700' :
-                            rJobType.includes("แทรก") ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700'
-                        }">${rJobType}</span>
+                            jobType.includes("ตรงตามแผน") ? 'bg-blue-100 text-blue-700' :
+                            jobType.includes("แทรก") ? 'bg-amber-100 text-amber-700' :
+                            jobType.includes("ตกค้าง") ? 'bg-rose-100 text-rose-700' : 'bg-purple-100 text-purple-700'
+                        }">${jobType}</span>
                     </td>
                     <td class="p-4 text-center">
                         <span class="px-3 py-1.5 rounded-xl text-[10px] font-black ${
