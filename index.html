@@ -140,7 +140,7 @@
         <!-- Dashboard Visualizer -->
         <div id="dashboardContent" class="hidden space-y-6">
             
-            <!-- Section 1: Plan vs Actual Performance -->
+            <!-- Section 1: สรุปและเปรียบเทียบผลงานจริงกับแผนการผลิต (Plan vs Actual Balance) -->
             <div class="space-y-4">
                 <div class="flex items-center gap-2 text-slate-800">
                     <i data-lucide="bar-chart-3" class="text-blue-600"></i>
@@ -376,7 +376,7 @@
                         <h4 class="text-xs font-black text-slate-700">รายชื่อใบงานในแผนงาน (Plan) ที่ตกค้างในวันที่เลือก</h4>
                     </div>
                     <div class="overflow-x-auto max-h-60 custom-scrollbar">
-                        <table class="w-full text-left text-xs border-collapse font-sans">
+                        <table class="w-full text-left text-xs border-collapse">
                             <thead class="bg-slate-900 text-white font-black uppercase text-[10px]">
                                 <tr>
                                     <th class="p-3">เลขที่ใบออเดอร์ (Prod Order No)</th>
@@ -469,58 +469,6 @@
                 </div>
             </div>
 
-            <!-- Section 5: Diagnostic Console -->
-            <div class="bg-slate-900 text-slate-300 p-6 rounded-[2.2rem] card-glow border border-slate-800 text-left space-y-4">
-                <div class="flex justify-between items-center cursor-pointer" onclick="toggleDiagnostics()">
-                    <div class="flex items-center gap-2.5">
-                        <div class="p-2.5 bg-slate-800 text-blue-400 rounded-xl">
-                            <i data-lucide="shield-alert" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-black text-white text-sm">แผงวิเคราะห์โครงสร้างข้อมูล (System Diagnostics Console)</h3>
-                            <p class="text-[11px] text-slate-400">คลิกขยายตรงนี้เพื่อตรวจสอบจำนวนแถว ข้อมูลที่สแกนได้ และตัวจับคู่คอลัมน์ของ Google Sheet</p>
-                        </div>
-                    </div>
-                    <div class="text-slate-400 hover:text-white transition-colors">
-                        <i id="diagToggleIcon" data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-                    </div>
-                </div>
-                
-                <div id="diagnosticsContent" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800 text-xs font-mono">
-                    <!-- Plan Diagnostics -->
-                    <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <h4 class="font-black text-blue-400 text-xs flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span> 1. แฟ้มแผนงาน (Plan Sheet Gid: 692364592)
-                        </h4>
-                        <div class="space-y-1.5">
-                            <p class="flex justify-between"><span>จำนวนแถวดึงได้จริง:</span> <span id="diagPlanRawCount" class="font-bold text-white">0</span></p>
-                            <p class="flex justify-between"><span>หัวคอลัมน์ดักจับ [ออร์เดอร์]:</span> <span id="diagPlanOrderKey" class="text-amber-400 font-bold">-</span></p>
-                            <p class="flex justify-between"><span>หัวคอลัมน์ดักจับ [เมตร]:</span> <span id="diagPlanMetersKey" class="text-amber-400 font-bold">-</span></p>
-                        </div>
-                        <div class="pt-1">
-                            <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">รายชื่อหัวตารางดิบที่พบ:</p>
-                            <div id="diagPlanHeaders" class="text-[9px] text-slate-400 bg-slate-900 p-2 rounded-lg max-h-24 overflow-y-auto break-all"></div>
-                        </div>
-                    </div>
-
-                    <!-- Production/Actual Diagnostics -->
-                    <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <h4 class="font-black text-emerald-400 text-xs flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span> 2. แฟ้มประวัติผลิตจริง (Production Sheet Gid: 1750235965)
-                        </h4>
-                        <div class="space-y-1.5">
-                            <p class="flex justify-between"><span>จำนวนแถวดึงได้จริง:</span> <span id="diagProdRawCount" class="font-bold text-white">0</span></p>
-                            <p class="flex justify-between"><span>หัวคอลัมน์ดักจับ [ออร์เดอร์]:</span> <span id="diagProdOrderKey" class="text-amber-400 font-bold">-</span></p>
-                            <p class="flex justify-between"><span>หัวคอลัมน์ดักจับ [เมตร]:</span> <span id="diagProdMetersKey" class="text-amber-400 font-bold">-</span></p>
-                        </div>
-                        <div class="pt-1">
-                            <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">รายชื่อหัวตารางดิบที่พบ:</p>
-                            <div id="diagProdHeaders" class="text-[9px] text-slate-400 bg-slate-900 p-2 rounded-lg max-h-24 overflow-y-auto break-all"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </div>
@@ -535,31 +483,22 @@
         let ontimeChart = null;
         let comparisonChart = null;
 
-        // ล้างและเตรียม URL โดยเพิ่มระบบรองรับ CORS Proxy สำหรับลิงก์ทั่วไปแบบอัตโนมัติ
         function cleanSheetUrl(url, defaultUrl) {
             if (!url) return defaultUrl;
             url = String(url).trim();
-            
-            // กรณีเป็นลิงก์ "เผยแพร่ทางเว็บ" (Publish to Web) อยู่แล้ว
-            if (url.includes('/d/e/') && url.includes('/pub')) {
-                if (url.includes('output=csv')) {
-                    return url;
-                }
-                if (url.includes('output=')) {
-                    return url.replace(/output=[a-zA-Z0-9]+/g, 'output=csv');
-                }
-                return url + (url.includes('?') ? '&' : '?') + 'output=csv';
-            }
-            
-            // กรณีเป็นลิงก์ Edit หรือลิงก์แบ่งปันทั่วไป (ซึ่งจะติดปัญหา CORS หากดึงตรงๆ)
             const dMatch = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-            if (dMatch) {
+            if (dMatch && !url.includes('/d/e/')) {
                 const id = dMatch[1];
                 const gidMatch = url.match(/gid=([0-9]+)/);
                 const gid = gidMatch ? gidMatch[1] : "0";
-                const exportUrl = `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
-                // ส่งผ่าน CORS proxy เพื่อทะลวงผ่านระบบความปลอดภัยของเบราว์เซอร์
-                return `https://corsproxy.io/?` + encodeURIComponent(exportUrl);
+                return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
+            }
+            if (url.includes('/d/e/') && url.includes('/pub')) {
+                if (url.includes('output=')) {
+                    return url.replace(/output=[a-zA-Z0-9]+/g, 'output=csv');
+                } else {
+                    return url + (url.includes('?') ? '&' : '?') + 'output=csv';
+                }
             }
             return url;
         }
@@ -585,18 +524,6 @@
             }
         }
 
-        function toggleDiagnostics() {
-            const content = document.getElementById('diagnosticsContent');
-            const icon = document.getElementById('diagToggleIcon');
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                content.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
-            }
-        }
-
         function saveCustomSheetUrls() {
             const prodUrlVal = document.getElementById('sheetUrlInput').value.trim();
             const planUrlVal = document.getElementById('planUrlInput').value.trim();
@@ -612,67 +539,22 @@
             }
         }
 
-        // คลีนตัวแปรฟอร์แมตขั้นสูง: ลบเว้นวรรค วงเล็บ เครื่องหมายพิเศษ ขีดแบ่ง และขึ้นบรรทัดใหม่ทั้งหมด
-        function cleanKey(str) {
-            if (!str) return "";
-            return String(str)
-                .toLowerCase()
-                .trim()
-                .replace(/[\r\n\t]/g, '') // ล้างสัญลักษณ์สิ้นสุดบรรทัดพิเศษ
-                .replace(/[^a-z0-9\u0e00-\u0e7f]/g, ''); // เก็บพยัญชนะ ตัวเลข และอักษรไทยทั้งหมด
-        }
-
-        // ระบบจับคู่คอลัมน์อัจฉริยะ (Strict Key Resolver)
-        function getFlexKey(row, possibleKeys) {
-            if (!row) return "";
-            
-            // ลำดับที่ 1: ตรวจจับกรณีตรงกันแบบ 100% ตัวพิมพ์เล็กใหญ่/เว้นวรรคตรงกัน (Exact Match)
-            for (let pk of possibleKeys) {
-                const cleanPk = String(pk).trim().toLowerCase();
-                for (let actualKey in row) {
-                    if (String(actualKey).trim().toLowerCase() === cleanPk) {
-                        return actualKey;
-                    }
-                }
-            }
-
-            // ลำดับที่ 2: ตรวจจับหลังจากทำการล้างตัวอักษรพิเศษและสัญลักษณ์ (Normalized Match)
-            const cleanedPossible = possibleKeys.map(k => cleanKey(k));
-            for (let cp of cleanedPossible) {
-                for (let actualKey in row) {
-                    if (cleanKey(actualKey) === cp) {
-                        return actualKey;
-                    }
-                }
-            }
-
-            // ลำดับที่ 3: ตรวจจับแบบ Substring (Substring Match) โดยต้องมีความยาวมากกว่า 3 ตัวอักษรเพื่อป้องกันการชนกัน
-            for (let cp of cleanedPossible) {
-                if (cp.length < 3) continue;
-                for (let actualKey in row) {
-                    const cleanedActual = cleanKey(actualKey);
-                    
-                    // ป้องกันความเสี่ยงกรณีชนกัน (Conflict Guards):
-                    // ห้ามไม่ให้คีย์หลักอย่าง "วันที่" ไปจับสับสนกับ "ดึงวันที่ตามแผน"
-                    if (cp === "วันที่" && cleanedActual !== "วันที่") {
-                        continue;
-                    }
-                    // ห้ามไม่ให้คีย์หลักอย่าง "ออร์เดอร์" ไปจับสับสนกับ "ออร์เดอร์แผน"
-                    if (cp === "ออรเดอร" && cleanedActual !== "ออรเดอร") {
-                        continue;
-                    }
-                    
-                    if (cleanedActual.includes(cp) || cp.includes(cleanedActual)) {
-                        return actualKey;
-                    }
-                }
-            }
-            return "";
-        }
-
+        // ฟังก์ชันค้นหาและดึงค่าโดยทำความสะอาดคีย์เพื่อป้องกันสระเพี้ยน \n หรือตัวแบ่งวรรค
         function getFlexVal(row, possibleKeys, defaultVal = "") {
-            const key = getFlexKey(row, possibleKeys);
-            return key ? String(row[key]) : defaultVal;
+            if (!row) return defaultVal;
+            for (let k of possibleKeys) {
+                if (!k) continue;
+                // ทำความสะอาดคีย์เปรียบเทียบ: ตัดเว้นวรรค วงเล็บ เครื่องหมายพิเศษ และขึ้นบรรทัดใหม่ (\n / \r)
+                const searchKey = String(k).replace(/[\s\(\)\.\/\n\r\\"]/g, '').trim().toLowerCase();
+                for (let actualKey in row) {
+                    if (!actualKey) continue;
+                    const compKey = String(actualKey).replace(/[\s\(\)\.\/\n\r\\"]/g, '').trim().toLowerCase();
+                    if (compKey === searchKey || compKey.includes(searchKey)) {
+                        return row[actualKey] !== undefined && row[actualKey] !== null ? String(row[actualKey]) : defaultVal;
+                    }
+                }
+            }
+            return defaultVal;
         }
 
         function parseTimeToMinutes(timeStr) {
@@ -690,7 +572,6 @@
             return isNaN(val) ? 0 : val;
         }
 
-        // จัดการฟอร์แมตวันที่แบบครอบคลุม รองรับ พ.ศ. สั้น/ยาว และ ค.ศ. สั้น/ยาว
         function normalizeDate(dateStr) {
             if (!dateStr) return "";
             dateStr = String(dateStr).trim();
@@ -702,36 +583,19 @@
                 parts = dateStr.split('/');
             } else if (dateStr.includes('-')) {
                 parts = dateStr.split('-');
+                if (parts[0].length === 4) { // Format: YYYY-MM-DD
+                    return `${parseInt(parts[2], 10)}/${parseInt(parts[1], 10)}/${parts[0]}`;
+                }
             }
 
             if (parts.length === 3) {
-                let part0 = parseInt(parts[0].trim(), 10);
-                let part1 = parseInt(parts[1].trim(), 10);
-                let part2 = parseInt(parts[2].trim(), 10);
-
-                let day, month, year;
-                if (parts[0].trim().length === 4) { // Format: YYYY-MM-DD
-                    year = part0;
-                    month = part1;
-                    day = part2;
-                } else { // Format: DD/MM/YYYY
-                    day = part0;
-                    month = part1;
-                    year = part2;
+                let day = parseInt(parts[0], 10);
+                let month = parseInt(parts[1], 10);
+                let yearStr = parts[2].trim();
+                let year = parseInt(yearStr, 10);
+                if (yearStr.length === 2) {
+                    year = 2000 + year;
                 }
-
-                // แปลงระบบปี พ.ศ. เป็น ค.ศ. และแปลงเลขปี 2 หลักให้สอดคล้องกัน
-                if (year > 2500) {
-                    year = year - 543; // แปลงพ.ศ. เป็น ค.ศ.
-                } else if (year < 100) {
-                    // หากบันทึกเป็นปี 69 (พ.ศ. 2569 ย่อ) -> แปลงเป็น ค.ศ. 2026
-                    if (year >= 60) {
-                        year = 2000 + (year + 2500 - 543) % 100;
-                    } else { // หากเป็น 26 (ค.ศ. 2026 ย่อ) -> แปลงเป็น 2026
-                        year = 2000 + year;
-                    }
-                }
-
                 return `${day}/${month}/${year}`;
             }
             return dateStr;
@@ -742,41 +606,42 @@
             return String(orderStr).replace(/[\s\-_]/g, '').toLowerCase().trim();
         }
 
-        // ถอดและประกอบข้อมูลแผน (Plan/Plan_Data)
+        // ตัวแยกและถอดข้อมูลชีตแผนงานการผลิต (Plan)
         function parsePlanRecord(row) {
-            const poNo = getFlexVal(row, ["Prod Order No", "Prod  Order No", "Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"]).trim();
+            const poNo = getFlexVal(row, ["Prod  \nOrder No", "Prod \n Order No", "Prod Order No", "Prod  Order No", "Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"]).trim();
             
-            let pMeters = parseFloat(String(getFlexVal(row, ["ยาวเมตร", "ยาวรวม (เมตร)", "ยาวรวม", "ความยาว", "ความยาวทั้งหมด", "ยาวรวมเมตร"])).replace(/,/g, '')) || 0;
+            let pMeters = parseFloat(String(getFlexVal(row, ["ยาวเมตร", "ยาวรวม \n(เมตร)", "ยาวรวม", "ความยาว", "ความยาวทั้งหมด", "ยาวรวมเมตร"])).replace(/,/g, '')) || 0;
             
-            let pWeight = parseFloat(String(getFlexVal(row, ["น้ำหนัก (KG)", "น้ำหนัก", "Net Weight", "Net  Weight", "นน"])).replace(/,/g, '')) || 0;
+            let pWeight = parseFloat(String(getFlexVal(row, ["น้ำหนัก (KG)", "น้ำหนัก", "Net \nWeight", "Net Weight", "นน"])).replace(/,/g, '')) || 0;
+            // ดักจับกรณีน้ำหนักลงหน่วยตันมาในชีตแผน (เช่น 1.15 ตัน แทน 1150 กิโลกรัม)
             if (pWeight < 50 && pMeters > 50) {
                 pWeight = pWeight * 1000;
             }
 
             let pArea = parseFloat(String(getFlexVal(row, ["พื้นที่ (m2)", "พื้นที่", "พื้นที่.ทั้งหมด(ตรม)", "พื้นที่ทั้งหมด"])).replace(/,/g, '')) || 0;
+            // หากชีตแผนไม่มีคอลัมน์พื้นที่ แต่ระบุขนาดกว้างยาวมา ให้สกัดสูตรคำนวณพื้นที่ (ตรม) อัตโนมัติ
             const widthVal = parseFloat(String(getFlexVal(row, ["กว้าง W", "หน้ากว้าง(มม)", "กว้าง"])).replace(/,/g, '')) || 0;
             if (pArea === 0 && widthVal > 0 && pMeters > 0) {
                 pArea = (widthVal / 1000) * pMeters;
             }
 
-            let pTime = parseTimeToMinutes(getFlexVal(row, ["Time (Min)", "Time", "CODE"]));
-            const pSpeed = parseFloat(String(getFlexVal(row, ["Speed (M/Min)", "Speed", "สปีด"])).replace(/,/g, '')) || 0;
+            let pTime = parseTimeToMinutes(getFlexVal(row, ["Time \n (Min)", "Time (Min)", "Time", "CODE"]));
+            // หากชีตแผนไม่มีคอลัมน์เวลา แต่ระบุความเร็วมา ให้คำนวณเปรียบเทียบ: เวลา = เมตร / สปีด
+            const pSpeed = parseFloat(String(getFlexVal(row, ["Speed \n(M/Min)", "Speed (M/Min)", "Speed", "สปีด"])).replace(/,/g, '')) || 0;
             if (pTime === 0 && pSpeed > 0 && pMeters > 0) {
                 pTime = pMeters / pSpeed;
             }
 
             const customer = getFlexVal(row, ["ชื่อลูกค้า", "ลูกค้า", "customer"], "-").trim();
             const product = getFlexVal(row, ["ชื่อสินค้า", "สินค้า"], "-").trim();
-            
             const rawDate = getFlexVal(row, ["วันที่", "วันส่งมอบ", "date"]);
             const date = normalizeDate(rawDate);
 
             return { poNo, pMeters, pWeight, pArea, pTime, pSpeed, customer, product, date };
         }
 
-        // ถอดและประกอบข้อมูลผลิตจริง (Actual/Production)
+        // ตัวแยกและถอดข้อมูลผลการผลิตจริงรายเครื่อง (Actual/Production)
         function parseActualRecord(row) {
-            // สำคัญมาก: กำหนดลำดับค้นหา Wo. No. ก่อน ออร์เดอร์แผน เพื่อไม่ให้ระบบหยิบข้อมูลแถวออเดอร์เปล่ามาประมวลผล
             const rWo = getFlexVal(row, ["Wo. No.", "WoNo", "ออร์เดอร์", "ออร์เดอร์แผน"], "-").trim();
             
             const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"], "0");
@@ -797,19 +662,8 @@
             if (!ontimeStatus || ontimeStatus === "") ontimeStatus = "นอกแผน";
 
             const rShift = getFlexVal(row, ["กะ", "shift"], "-").trim();
-            
-            // ตรวจสอบวันที่จากคอลัมน์ "วันที่" ของแถวนั้นตรงๆ ป้องกันการหลงจับคู่ผิดกับ "ดึงวันที่ตามแผน"
-            let rawDate = getFlexVal(row, ["วันที่", "date"]);
-            if (!rawDate) {
-                const startTimeVal = getFlexVal(row, ["เวลาเริ่ม", "start_time"]);
-                if (startTimeVal && startTimeVal.includes(' ')) {
-                    rawDate = startTimeVal.split(' ')[0];
-                } else if (startTimeVal && startTimeVal.includes('/')) {
-                    rawDate = startTimeVal;
-                }
-            }
+            const rawDate = getFlexVal(row, ["วันที่", "date"]);
             const rDate = normalizeDate(rawDate);
-
             const rStart = getFlexVal(row, ["เวลาเริ่ม", "start_time"], "-").trim();
             const rEnd = getFlexVal(row, ["เวลาสิ้นสุด", "end_time"], "-").trim();
             const rJobType = getFlexVal(row, ["จำแนกประเภทงาน", "ประเภทงาน"], "-").trim();
@@ -871,28 +725,6 @@
             });
         }
 
-        // ตัวดึงข้อมูลอัจฉริยะแบบป้องกัน CORS Block
-        async function fetchWithProxyFallback(url) {
-            try {
-                const res = await fetch(url);
-                if (!res.ok) throw new Error();
-                return await res.text();
-            } catch (err) {
-                console.warn("Direct fetch failed, resolving through CORS proxy fallback...");
-                try {
-                    const proxyUrl = `https://corsproxy.io/?` + encodeURIComponent(url);
-                    const proxyRes = await fetch(proxyUrl);
-                    if (!proxyRes.ok) throw new Error();
-                    return await proxyRes.text();
-                } catch (proxyErr) {
-                    const backupProxyUrl = `https://api.allorigins.win/raw?url=` + encodeURIComponent(url);
-                    const backupRes = await fetch(backupProxyUrl);
-                    if (!backupRes.ok) throw new Error("All proxy servers are currently unreachable");
-                    return await backupRes.text();
-                }
-            }
-        }
-
         async function fetchData() {
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('errorState').classList.add('hidden');
@@ -902,40 +734,35 @@
             const planUrl = getActivePlanUrl();
 
             try {
+                const [prodResponse, planResponse] = await Promise.all([
+                    fetch(prodUrl),
+                    fetch(planUrl)
+                ]);
+
+                if (!prodResponse.ok || !planResponse.ok) {
+                    throw new Error("ดึงข้อมูลไม่สำเร็จ ลิงก์สเปรดชีตอย่างน้อยหนึ่งแหล่งถูกจำกัดสิทธิ์หรือระบุปลายทางไม่ถูกต้อง");
+                }
+
                 const [prodCsv, planCsv] = await Promise.all([
-                    fetchWithProxyFallback(prodUrl),
-                    fetchWithProxyFallback(planUrl)
+                    prodResponse.text(),
+                    planResponse.text()
                 ]);
 
                 rawProductionRecords = parseCSV(prodCsv);
                 rawPlanRecords = parseCSV(planCsv);
 
                 if (rawProductionRecords.length > 0 && rawPlanRecords.length > 0) {
-                    // รายงานผล Console Diagnostics
-                    const planHeaders = Object.keys(rawPlanRecords[0]);
-                    const prodHeaders = Object.keys(rawProductionRecords[0]);
-
-                    document.getElementById('diagPlanRawCount').innerText = rawPlanRecords.length + " แถว";
-                    document.getElementById('diagProdRawCount').innerText = rawProductionRecords.length + " แถว";
-                    document.getElementById('diagPlanHeaders').innerText = planHeaders.join(', ');
-                    document.getElementById('diagProdHeaders').innerText = prodHeaders.join(', ');
-
-                    document.getElementById('diagPlanOrderKey').innerText = getFlexKey(rawPlanRecords[0], ["Prod Order No", "Wo. No."]) || "ไม่พบ!";
-                    document.getElementById('diagPlanMetersKey').innerText = getFlexKey(rawPlanRecords[0], ["ยาวเมตร", "ความยาว"]) || "ไม่พบ!";
-                    document.getElementById('diagProdOrderKey').innerText = getFlexKey(rawProductionRecords[0], ["Wo. No.", "WoNo", "ออร์เดอร์"]) || "ไม่พบ!";
-                    document.getElementById('diagProdMetersKey').innerText = getFlexKey(rawProductionRecords[0], ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "ยาวเมตร"]) || "ไม่พบ!";
-
                     populateFilterOptions(rawProductionRecords, rawPlanRecords);
                     filterData();
-                    showToast("ดึงและเชื่อมต่อข้อมูลเปรียบเทียบเสร็จสิ้น!", "success");
+                    showToast("ดึงและเชื่อมต่อข้อมูลเปรียบเทียบจากสองตารางเสร็จสิ้น!", "success");
                     document.getElementById('dashboardContent').classList.remove('hidden');
                 } else {
-                    throw new Error("ดึงข้อมูลสำเร็จ แต่โครงสร้างข้อมูลข้างในว่างเปล่า");
+                    throw new Error("ข้อมูลในแผ่นงานว่างเปล่า หรือหัวตารางไม่ตรงตามมาตรฐาน");
                 }
 
             } catch (error) {
                 console.error(error);
-                document.getElementById('errorMessage').innerText = "อาจเกิดจากรูปแบบการแชร์ลิงก์ไม่เปิดให้บุคคลภายนอกเข้าถึง หรือข้อมูลคอลัมน์ไม่สอดคล้องกับระบบ " + error.message;
+                document.getElementById('errorMessage').innerText = error.message;
                 document.getElementById('errorState').classList.remove('hidden');
                 showToast("การเชื่อมต่อข้อมูลเกิดข้อผิดพลาด", "error");
             } finally {
@@ -947,16 +774,16 @@
         function populateFilterOptions(prodRecords, planRecords) {
             const dateSelect = document.getElementById('dateFilter');
             const currentSelected = dateSelect.value;
-            dateSelect.innerHTML = '<option value="all">ทุกวันที่ผลิต / ดูสะสมทั้งหมด</option>';
+            dateSelect.innerHTML = '<option value="all">ทุกวันที่ผลิต</option>';
             
             const rawDates = [];
             prodRecords.forEach(r => {
                 const parsed = parseActualRecord(r);
-                if (parsed.rDate && parsed.rWo && parsed.rWo !== "-") rawDates.push(parsed.rDate);
+                if (parsed.rDate) rawDates.push(parsed.rDate);
             });
             planRecords.forEach(r => {
                 const parsed = parsePlanRecord(r);
-                if (parsed.date && parsed.poNo && parsed.poNo !== "-") rawDates.push(parsed.date);
+                if (parsed.date) rawDates.push(parsed.date);
             });
             
             const normalizedUniqueDates = [...new Set(rawDates.filter(Boolean))];
@@ -972,7 +799,7 @@
             normalizedUniqueDates.forEach(date => {
                 const opt = document.createElement('option');
                 opt.value = date;
-                opt.innerText = "วันผลิตที่ " + date;
+                opt.innerText = date;
                 dateSelect.appendChild(opt);
             });
 
@@ -989,10 +816,6 @@
 
             const filteredProd = rawProductionRecords.filter(row => {
                 const parsed = parseActualRecord(row);
-                // กรองเอาแถวขยะออก (ต้องมีเลขออร์เดอร์ระบุชัดเจน)
-                if (!parsed.rWo || parsed.rWo === "-" || parsed.rWo === "") {
-                    return false;
-                }
                 const matchDate = (dateVal === "all" || parsed.rDate === dateVal);
                 const matchSearch = (searchVal === "" || parsed.rWo.toLowerCase().includes(searchVal));
                 return matchDate && matchSearch;
@@ -1000,10 +823,6 @@
 
             const filteredPlan = rawPlanRecords.filter(row => {
                 const parsed = parsePlanRecord(row);
-                // กรองเอาแถวขยะออก (ต้องมีเป้าหมายเมตรระบุ)
-                if (!parsed.poNo || parsed.poNo === "-" || parsed.poNo === "" || parsed.pMeters === 0) {
-                    return false;
-                }
                 const matchDate = (dateVal === "all" || parsed.date === dateVal);
                 return matchDate;
             });
@@ -1013,7 +832,7 @@
         }
 
         function renderDashboard(recordsProd, recordsPlan, selectedDate) {
-            // --- 1. สถิติผลิตจริง ---
+            // --- 1. ผลิตจริง (Actual Production Stats) ---
             let actMeters = 0;
             let actWeight = 0;
             let actArea = 0;
@@ -1048,7 +867,7 @@
                 const endShort = pActual.rEnd.includes(" ") ? pActual.rEnd.split(" ")[1] : pActual.rEnd;
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition-all border-b border-slate-100";
+                tr.className = "hover:bg-slate-50 transition-all";
                 tr.innerHTML = `
                     <td class="p-4 font-bold text-slate-800">${pActual.rWo}</td>
                     <td class="p-4 text-center font-bold text-slate-500">${pActual.rShift}</td>
@@ -1058,9 +877,9 @@
                     <td class="p-4 text-right font-black text-slate-700">${pActual.lossTimeMin} น.</td>
                     <td class="p-4 text-center font-black text-slate-700">${pActual.stopsCount} ครั้ง</td>
                     <td class="p-4 text-right font-black text-slate-700">${pActual.speed.toLocaleString()}</td>
-                    <td class="p-4 text-right font-black text-slate-700">${Math.round(pActual.meters).toLocaleString()}</td>
-                    <td class="p-4 text-right font-black text-slate-700">${Math.round(pActual.weight).toLocaleString()}</td>
-                    <td class="p-4 text-right font-black text-slate-700">${Math.round(pActual.area).toLocaleString()}</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.meters.toLocaleString()}</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.weight.toLocaleString()}</td>
+                    <td class="p-4 text-right font-black text-slate-700">${pActual.area.toLocaleString()}</td>
                     <td class="p-4 text-center">
                         <span class="px-3 py-1 rounded-full text-[10px] font-black ${
                             pActual.rJobType.includes("ตรงตามแผน") ? 'bg-blue-100 text-blue-700' :
@@ -1077,7 +896,7 @@
                 tableBody.appendChild(tr);
             });
 
-            // --- 2. สถิติแผนการผลิต ---
+            // --- 2. แผนการผลิต (Plan Schedule Stats) ---
             let planMeters = 0;
             let planWeight = 0;
             let planArea = 0;
@@ -1096,7 +915,7 @@
             const actualAvgSpeed = actSpeedCount > 0 ? (actSpeedSum / actSpeedCount) : 0;
             const actualAvgTimeMin = Math.round(actTimeSec / 60);
 
-            // --- 3. การตรวจสอบใบงานค้างจากแผนที่ไม่ได้สับรันผลิต ---
+            // --- 3. การตรวจสอบใบงานค้างจากแผนที่ไม่ได้รันผลิต (Planned Backlog Tracking) ---
             const producedOrdersSet = new Set();
             recordsProd.forEach(row => {
                 const pActual = parseActualRecord(row);
@@ -1140,12 +959,12 @@
             });
 
             if (backlogCount === 0) {
-                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! ไม่พบงานในแผนตกค้างที่ไม่ได้สับรันผลิตในวันนี้</td></tr>`;
+                backlogTableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">✨ ยอดเยี่ยมมาก! ไม่พบงานในแผนตกค้างที่ไม่ได้สับรันในวันนี้</td></tr>`;
             }
 
             const backlogAvgSpeed = backlogTimeSum > 0 ? (backlogMetersSum / backlogTimeSum) : 0;
 
-            // --- 4. แสดงสถิติกราฟิกบน Dashboard ---
+            // --- 4. อัปเดตข้อมูล UI KPI บาลานซ์ ---
             document.getElementById('actualJobs').innerText = recordsProd.length;
             document.getElementById('planJobs').innerText = `/ ${planJobsCount}`;
             const jobAch = planJobsCount > 0 ? ((recordsProd.length / planJobsCount) * 100) : 0;
@@ -1197,13 +1016,16 @@
             document.getElementById('diffSpeed').innerText = `ส่วนต่างสปีด: ${diffS >= 0 ? '+' : ''}${diffS.toFixed(1)} m/min`;
             document.getElementById('diffSpeed').className = `text-[11px] font-bold ${diffS >= 0 ? 'text-emerald-600' : 'text-rose-600'}`;
 
-            // อัปเดตตารางและตัววิเคราะห์งานค้าง (Backlog Stats)
+            // อัปเดตสถิติตารางค้างผลิต (Missed Plan Backlog Summary)
             document.getElementById('backlogSummaryCount').innerText = `ยอดค้างผลิต: ${backlogCount} งาน`;
             document.getElementById('backlogMeters').innerText = Math.round(backlogMetersSum).toLocaleString() + " ม.";
             document.getElementById('backlogSqm').innerText = Math.round(backlogAreaSum).toLocaleString() + " ตร.ม.";
             document.getElementById('backlogWeight').innerText = Math.round(backlogWeightSum).toLocaleString() + " กก.";
             document.getElementById('backlogMinutes').innerText = Math.round(backlogTimeSum).toLocaleString() + " นาที";
             document.getElementById('backlogSpeed').innerText = backlogAvgSpeed.toFixed(1) + " m/m";
+
+            const totalScheduledJobs = ontimeCounts["ทันแผน"] + ontimeCounts["ช้ากว่าแผน"];
+            const ontimePercent = totalScheduledJobs > 0 ? ((ontimeCounts["ทันแผน"] / totalScheduledJobs) * 100) : 0;
 
             document.getElementById('rowCount').innerText = `แสดงผลข้อมูลผลิตจริง: ${recordsProd.length} รายการ`;
 
@@ -1242,7 +1064,7 @@
             comparisonChart = new Chart(ctxComp, {
                 type: 'bar',
                 data: {
-                    labels: [dateLabel === 'all' ? 'สะสมภาพรวมทั้งหมด' : `แผนงานวันที่ ${dateLabel}`],
+                    labels: [dateLabel === 'all' ? 'ภาพรวมทั้งหมด' : `วันที่ ${dateLabel}`],
                     datasets: [
                         {
                             label: 'ความยาวตามแผนงาน (เมตร)',
