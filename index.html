@@ -106,7 +106,7 @@
                     <i data-lucide="settings" class="w-4 h-4"></i> ตั้งค่าแหล่งข้อมูล
                 </button>
                 
-                <!-- NEW: Styled Date Range Selector -->
+                <!-- Styled Date Range Selector -->
                 <div class="flex flex-col sm:flex-row items-center gap-2 bg-slate-100 p-2 rounded-2xl w-full sm:w-auto">
                     <div class="flex items-center gap-1.5 px-2 w-full sm:w-auto">
                         <i data-lucide="calendar" class="w-4 h-4 text-slate-400 shrink-0"></i>
@@ -336,42 +336,36 @@
                     <span id="nonPdrBadge" class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-4 py-1.5 rounded-full text-xs font-black">ไม่ใช่ PDR: 0 ออเดอร์</span>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-left">
-                    <!-- Orders -->
-                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-2xl">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ออเดอร์ทั้งหมด</p>
-                        <p id="nonPdrOrders" class="text-2xl font-black text-slate-100 mt-1">0</p>
-                        <p class="text-[10px] text-slate-500">จำนวนออเดอร์จริง</p>
-                    </div>
-                    <!-- Meters -->
-                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-2xl">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ระยะทาง (เมตร)</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-left">
+                    <!-- เมตรผลิตจริง -->
+                    <div class="bg-slate-800/50 border border-slate-800 p-5 rounded-2xl">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ระยะทางรวม (Meters)</p>
                         <p id="nonPdrMeters" class="text-2xl font-black text-indigo-400 mt-1">0 <span class="text-xs font-normal">ม.</span></p>
                         <p class="text-[10px] text-slate-500">คอลัมน์ P (จริง)</p>
                     </div>
-                    <!-- Kilometers -->
-                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-2xl">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ระยะทาง (กม.)</p>
-                        <p id="nonPdrKm" class="text-2xl font-black text-amber-400 mt-1">0 <span class="text-xs font-normal">กม.</span></p>
-                        <p class="text-[10px] text-slate-500">Meters / 1000</p>
-                    </div>
-                    <!-- Area -->
-                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-2xl">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">พื้นที่รวม</p>
-                        <p id="nonPdrArea" class="text-2xl font-black text-emerald-400 mt-1">0 <span class="text-xs font-normal">ตร.ม.</span></p>
-                        <p class="text-[10px] text-slate-500">คอลัมน์ O (จริง)</p>
-                    </div>
-                    <!-- Weight -->
-                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-2xl">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">น้ำหนักรวม</p>
+                    <!-- น้ำหนักจริง -->
+                    <div class="bg-slate-800/50 border border-slate-800 p-5 rounded-2xl">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">น้ำหนักรวม (Weight/KG)</p>
                         <p id="nonPdrWeight" class="text-2xl font-black text-pink-400 mt-1">0 <span class="text-xs font-normal">กก.</span></p>
                         <p class="text-[10px] text-slate-500">คอลัมน์ N (จริง)</p>
                     </div>
-                    <!-- Speed & Time -->
-                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-2xl">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">สปีดเฉลี่ย</p>
-                        <p id="nonPdrSpeed" class="text-2xl font-black text-rose-400 mt-1">0 <span class="text-xs font-normal">m/m</span></p>
-                        <p id="nonPdrTime" class="text-[10px] text-slate-400 mt-1">เวลาผลิตรวม: 0 นาที</p>
+                    <!-- พื้นที่จริง -->
+                    <div class="bg-slate-800/50 border border-slate-800 p-5 rounded-2xl">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">พื้นที่รวม (Area/SQM)</p>
+                        <p id="nonPdrArea" class="text-2xl font-black text-emerald-400 mt-1">0 <span class="text-xs font-normal">ตร.ม.</span></p>
+                        <p class="text-[10px] text-slate-500">คอลัมน์ O (จริง)</p>
+                    </div>
+                    <!-- เวลาดำเนินงานจริง -->
+                    <div class="bg-slate-800/50 border border-slate-800 p-5 rounded-2xl">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">เวลาดำเนินงานรวม (Time/Min)</p>
+                        <p id="nonPdrTime" class="text-2xl font-black text-purple-400 mt-1">0 <span class="text-xs font-normal">นาที</span></p>
+                        <p class="text-[10px] text-slate-500">แปลงจากคอลัมน์ I (วินาที)</p>
+                    </div>
+                    <!-- ความเร็วเฉลี่ยจริง -->
+                    <div class="bg-slate-800/50 border border-slate-800 p-5 rounded-2xl">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ความเร็วเดินเครื่องเฉลี่ย (Speed)</p>
+                        <p id="nonPdrSpeed" class="text-2xl font-black text-rose-400 mt-1">0 <span class="text-xs font-normal">m/min</span></p>
+                        <p class="text-[10px] text-slate-500">คำนวณจาก เมตร / นาทีรันจริง</p>
                     </div>
                 </div>
             </div>
@@ -391,45 +385,45 @@
                     <span id="backlogSummaryCount" class="px-3 py-1.5 bg-amber-100 text-amber-800 text-[10px] font-black rounded-xl">ยอดค้างผลิต: 0 งาน</span>
                 </div>
 
-                <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <!-- เมตรค้าง -->
-                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="milestone" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">ระยะทางค้างแผน</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">ระยะทางรวม (Meters)</p>
                             <h4 id="backlogMeters" class="text-sm font-black text-slate-700">0 ม.</h4>
                         </div>
                     </div>
-                    <!-- ตารางเมตรค้าง -->
-                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
-                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="layout" class="w-4 h-4"></i></div>
-                        <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">พื้นที่ค้างแผน</p>
-                            <h4 id="backlogSqm" class="text-sm font-black text-slate-700">0 ตร.ม.</h4>
-                        </div>
-                    </div>
                     <!-- น้ำหนักค้าง -->
-                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="weight" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">น้ำหนักค้างแผน</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">น้ำหนักรวม (Weight/KG)</p>
                             <h4 id="backlogWeight" class="text-sm font-black text-slate-700">0 กก.</h4>
                         </div>
                     </div>
+                    <!-- ตารางเมตรค้าง -->
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
+                        <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="layout" class="w-4 h-4"></i></div>
+                        <div>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">พื้นที่รวม (Area/SQM)</p>
+                            <h4 id="backlogSqm" class="text-sm font-black text-slate-700">0 ตร.ม.</h4>
+                        </div>
+                    </div>
                     <!-- เวลาค้าง -->
-                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
                         <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="clock" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">เวลาค้างแผน</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">เวลาดำเนินงานรวม (Time/Min)</p>
                             <h4 id="backlogMinutes" class="text-sm font-black text-slate-700">0 นาที</h4>
                         </div>
                     </div>
                     <!-- สปีดเฉลี่ยของแผนที่ค้าง -->
-                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left col-span-2 lg:col-span-1">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center gap-3 shadow-sm text-left">
                         <div class="p-2.5 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="zap" class="w-4 h-4"></i></div>
                         <div>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase">สปีดชดเชยเฉลี่ย</p>
-                            <h4 id="backlogSpeed" class="text-sm font-black text-rose-600">0 m/m</h4>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">ความเร็วเดินเครื่องเฉลี่ย (Speed)</p>
+                            <h4 id="backlogSpeed" class="text-sm font-black text-rose-600">0 m/min</h4>
                         </div>
                     </div>
                 </div>
@@ -533,58 +527,6 @@
                 </div>
             </div>
 
-            <!-- Section 5: Diagnostic Console -->
-            <div class="bg-slate-900 text-slate-300 p-6 rounded-[2.2rem] card-glow border border-slate-800 text-left space-y-4">
-                <div class="flex justify-between items-center cursor-pointer" onclick="toggleDiagnostics()">
-                    <div class="flex items-center gap-2.5">
-                        <div class="p-2.5 bg-slate-800 text-blue-400 rounded-xl">
-                            <i data-lucide="shield-alert" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-black text-white text-sm">แผงวิเคราะห์โครงสร้างข้อมูล (System Diagnostics Console)</h3>
-                            <p class="text-[11px] text-slate-400">คลิกขยายตรงนี้เพื่อตรวจสอบจำนวนแถว ข้อมูลที่สแกนได้ และตัวจับคู่คอลัมน์ของ Google Sheet</p>
-                        </div>
-                    </div>
-                    <div class="text-slate-400 hover:text-white transition-colors">
-                        <i id="diagToggleIcon" data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-300"></i>
-                    </div>
-                </div>
-                
-                <div id="diagnosticsContent" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800 text-xs font-mono">
-                    <!-- Plan Diagnostics -->
-                    <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <h4 class="font-black text-blue-400 text-xs flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span> 1. แฟ้มแผนงาน (Plan Sheet Gid: 692364592)
-                        </h4>
-                        <div class="space-y-1.5">
-                            <p class="flex justify-between"><span>จำนวนแถวดึงได้จริง:</span> <span id="diagPlanRawCount" class="font-bold text-white">0</span></p>
-                            <p class="flex justify-between"><span>หัวคอลัมน์ดักจับ [ออร์เดอร์]:</span> <span id="diagPlanOrderKey" class="text-amber-400 font-bold">-</span></p>
-                            <p class="flex justify-between"><span>หัวคอลัมน์ดักจับ [เมตร]:</span> <span id="diagPlanMetersKey" class="text-amber-400 font-bold">-</span></p>
-                        </div>
-                        <div class="pt-1">
-                            <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">รายชื่อหัวตารางดิบที่พบ:</p>
-                            <div id="diagPlanHeaders" class="text-[9px] text-slate-400 bg-slate-900 p-2 rounded-lg max-h-24 overflow-y-auto break-all"></div>
-                        </div>
-                    </div>
-
-                    <!-- Production/Actual Diagnostics -->
-                    <div class="space-y-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <h4 class="font-black text-emerald-400 text-xs flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span> 2. แฟ้มประวัติผลิตจริง (Production Sheet Gid: 1750235965)
-                        </h4>
-                        <div class="space-y-1.5">
-                            <p class="flex justify-between"><span>จำนวนแถวดึงได้จริง:</span> <span id="diagProdRawCount" class="font-bold text-white">0</span></p>
-                            <p class="flex justify-between"><span>หัวคอลัมน์ดักจับ [ออร์เดอร์]:</span> <span id="diagProdOrderKey" class="text-amber-400 font-bold">-</span></p>
-                            <p class="flex justify-between"><span>หัวคอลัมน์ดักจับ [เมตร]:</span> <span id="diagProdMetersKey" class="text-amber-400 font-bold">-</span></p>
-                        </div>
-                        <div class="pt-1">
-                            <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">รายชื่อหัวตารางดิบที่พบ:</p>
-                            <div id="diagProdHeaders" class="text-[9px] text-slate-400 bg-slate-900 p-2 rounded-lg max-h-24 overflow-y-auto break-all"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </div>
@@ -646,18 +588,6 @@
                 modal.classList.remove('hidden');
             } else {
                 modal.classList.add('hidden');
-            }
-        }
-
-        function toggleDiagnostics() {
-            const content = document.getElementById('diagnosticsContent');
-            const icon = document.getElementById('diagToggleIcon');
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                content.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
             }
         }
 
@@ -1005,20 +935,6 @@
                 rawPlanRecords = parseCSV(planCsv);
 
                 if (rawProductionRecords.length > 0 && rawPlanRecords.length > 0) {
-                    // รายงานผล Console Diagnostics
-                    const planHeaders = Object.keys(rawPlanRecords[0]);
-                    const prodHeaders = Object.keys(rawProductionRecords[0]);
-
-                    document.getElementById('diagPlanRawCount').innerText = rawPlanRecords.length + " แถว";
-                    document.getElementById('diagProdRawCount').innerText = rawProductionRecords.length + " แถว";
-                    document.getElementById('diagPlanHeaders').innerText = planHeaders.join(', ');
-                    document.getElementById('diagProdHeaders').innerText = prodHeaders.join(', ');
-
-                    document.getElementById('diagPlanOrderKey').innerText = getFlexKey(rawPlanRecords[0], ["Prod Order No", "Prod  Order No"]) || "ไม่พบ!";
-                    document.getElementById('diagPlanMetersKey').innerText = getFlexKey(rawPlanRecords[0], ["ยาวเมตร", "ความยาว"]) || "ไม่พบ!";
-                    document.getElementById('diagProdOrderKey').innerText = getFlexKey(rawProductionRecords[0], ["PD", "ใบงาน"]) || "ไม่พบ!";
-                    document.getElementById('diagProdMetersKey').innerText = getFlexKey(rawProductionRecords[0], ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด"]) || "ไม่พบ!";
-
                     initDateRangeFilters(rawProductionRecords, rawPlanRecords);
                     filterData();
                     showToast("ดึงและเชื่อมต่อข้อมูลเปรียบเทียบเสร็จสิ้น!", "success");
@@ -1316,13 +1232,11 @@
 
             // --- 6. อัปเดตข้อมูลบน แผงสรุปงานประเภทอื่นๆ (Non-PDR Summary) ---
             document.getElementById('nonPdrBadge').innerText = `ไม่ใช่ PDR: ${actNonPdrJobsCount} ออเดอร์`;
-            document.getElementById('nonPdrOrders').innerText = actNonPdrJobsCount;
             document.getElementById('nonPdrMeters').innerHTML = `${Math.round(actNonPdrMeters).toLocaleString()} <span class="text-xs font-normal">ม.</span>`;
-            document.getElementById('nonPdrKm').innerHTML = `${(actNonPdrMeters / 1000).toFixed(3)} <span class="text-xs font-normal">กม.</span>`;
             document.getElementById('nonPdrArea').innerHTML = `${Math.round(actNonPdrArea).toLocaleString()} <span class="text-xs font-normal">ตร.ม.</span>`;
             document.getElementById('nonPdrWeight').innerHTML = `${Math.round(actNonPdrWeight).toLocaleString()} <span class="text-xs font-normal">กก.</span>`;
-            document.getElementById('nonPdrSpeed').innerHTML = `${nonPdrSpeed.toFixed(1)} <span class="text-xs font-normal">m/m</span>`;
-            document.getElementById('nonPdrTime').innerText = `เวลาผลิตรวม: ${Math.round(nonPdrTimeMin).toLocaleString()} นาที`;
+            document.getElementById('nonPdrSpeed').innerHTML = `${nonPdrSpeed.toFixed(1)} <span class="text-xs font-normal">m/min</span>`;
+            document.getElementById('nonPdrTime').innerHTML = `${Math.round(nonPdrTimeMin).toLocaleString()} <span class="text-xs font-normal">นาที</span>`;
 
             // --- 7. คำนวณสรุปและตกค้าง Backlog ---
             const producedOrdersSet = new Set();
@@ -1377,7 +1291,7 @@
             document.getElementById('backlogSqm').innerText = Math.round(backlogAreaSum).toLocaleString() + " ตร.ม.";
             document.getElementById('backlogWeight').innerText = Math.round(backlogWeightSum).toLocaleString() + " กก.";
             document.getElementById('backlogMinutes').innerText = Math.round(backlogTimeSum).toLocaleString() + " นาที";
-            document.getElementById('backlogSpeed').innerText = backlogAvgSpeed.toFixed(1) + " m/m";
+            document.getElementById('backlogSpeed').innerText = backlogAvgSpeed.toFixed(1) + " m/min";
 
             document.getElementById('rowCount').innerText = `แสดงผลข้อมูลผลิตจริง: ${recordsProd.length} รายการ`;
 
@@ -1485,6 +1399,7 @@
             document.body.removeChild(link);
         }
 
+        // แจ้งเตือนข้อความด้วย Toast UI เสมอ ไม่ใช่ alert()
         function showToast(msg, type) {
             const toast = document.getElementById('toast');
             toast.innerText = msg;
