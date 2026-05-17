@@ -265,13 +265,13 @@
     </div>
 
     <script>
-        // ลิงก์ตรงที่ผู้ใช้ระบุมา
-        const defaultCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?output=csv";
+        // ใช้ลิงก์ที่ระบุแถบตารางเฉพาะเจาะจงที่ผู้ใช้ให้มาเป็นค่าตั้งต้นเริ่มต้น
+        const defaultCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRHOZ468PE4s3jv2SMHubnRnvmYTAGQg70M5JkeQQTCNPLor3hs30IxX1SjhVf9Q0lxdIDMNLKcgnh1/pub?gid=1750235965&single=true&output=csv";
         let rawRecords = [];
         let ontimeChart = null;
         let jobTypeChart = null;
 
-        // ฟังก์ชันแปลงลิงก์อัตโนมัติให้ได้ CSV เสมอ
+        // ฟังก์ชันแปลงลิงก์อัตโนมัติให้ได้ CSV และระบุพารามิเตอร์ครบถ้วน
         function cleanSheetUrl(url) {
             if (!url) return defaultCsvUrl;
             url = url.trim();
@@ -425,6 +425,7 @@
             });
         }
 
+        // แสดงผลแจ้งเตือนแบบด่วน
         function showToast(msg, type) {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
@@ -473,7 +474,7 @@
             tableBody.innerHTML = '';
 
             records.forEach(row => {
-                // Parse numbers dynamically using safe regex matching
+                // ดึงข้อมูลตัวเลขและตัดสัญลักษณ์พิเศษออก
                 const rawMeters = getFlexVal(row, ["ความยาวทั้งหมด(เมตร)", "ความยาวทั้งหมด", "เมตร", "length"], "0");
                 const rawWeight = getFlexVal(row, ["นน.ทั้งหมด(กก)", "นน.ทั้งหมด", "น้ำหนักรวม", "weight"], "0");
                 const rawSpeed = getFlexVal(row, ["AVG_Speed(M/min)", "AVG_Speed", "สปีดจริง", "speed"], "0");
@@ -491,7 +492,7 @@
                     speedCount++;
                 }
 
-                // Status mapping with fallback handling
+                // วิเคราะห์สถานะความตรงต่อเวลา
                 let ontimeStatus = getFlexVal(row, ["สถานะ Ontime", "สถานะ"], "นอกแผน").trim();
                 if (!ontimeStatus || ontimeStatus === "") ontimeStatus = "นอกแผน";
                 if (ontimeCounts.hasOwnProperty(ontimeStatus)) {
